@@ -132,6 +132,7 @@ const CompanyAddressInputs = () => {
         })}
       </h6>
       <TextInput source="address" helperText={false} />
+      <TextInput source="neighborhood" label="Bairro" helperText={false} />
       <TextInput source="city" helperText={false} />
       <TextInput source="zipcode" helperText={false} />
       <TextInput source="state_abbr" helperText={false} />
