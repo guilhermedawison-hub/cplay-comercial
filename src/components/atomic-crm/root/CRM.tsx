@@ -14,6 +14,8 @@ import { Admin } from "@/components/admin/admin";
 import { ForgotPasswordPage } from "@/components/supabase/forgot-password-page";
 import { SetPasswordPage } from "@/components/supabase/set-password-page";
 import { OAuthConsentPage } from "@/components/supabase/oauth-consent-page";
+import products from "@/components/cplay/products";
+import leadSources from "@/components/cplay/lead-sources";
 
 import companies from "../companies";
 import contacts from "../contacts";
@@ -72,48 +74,6 @@ export type CRMProps = {
   layout?: LayoutComponent;
 } & Partial<ConfigurationContextValue>;
 
-/**
- * CRM Component
- *
- * This component sets up and renders the main CRM application using `ra-core`. It provides
- * default configurations and themes but allows for customization through props. The component
- * seeds the store with any custom prop values for backwards compatibility.
- *
- * @param {LabeledValue[]} companySectors - The list of company sectors used in the application.
- * @param {string} currency - The ISO 4217 currency code used to format monetary values (e.g. "USD", "EUR", "GBP").
- * @param {RaThemeOptions} darkTheme - The theme to use when the application is in dark mode.
- * @param {LabeledValue[]} dealCategories - The categories of deals used in the application.
- * @param {string[]} dealPipelineStatuses - The statuses of deals in the pipeline used in the application.
- * @param {DealStage[]} dealStages - The stages of deals used in the application.
- * @param {RaThemeOptions} lightTheme - The theme to use when the application is in light mode.
- * @param {string} darkModeLogo - Logo shown in dark mode and on the auth pages. Must be an imported asset, an absolute URL, or a data URI — never a route-relative path like "./logos/x.svg", which breaks on nested routes such as /oauth/consent (issue #291).
- * @param {string} lightModeLogo - Logo shown in light mode. Same rule as darkModeLogo: imported asset, absolute URL, or data URI only.
- * @param {NoteStatus[]} noteStatuses - The statuses of notes used in the application.
- * @param {LabeledValue[]} taskTypes - The types of tasks used in the application.
- * @param {string} title - The title of the CRM application.
- *
- * @returns {JSX.Element} The rendered CRM application.
- *
- * @example
- * // Basic usage of the CRM component
- * import { CRM } from '@/components/atomic-crm/dashboard/CRM';
- *
- * const App = () => (
- *     <CRM
- *         darkModeLogo="https://example.com/logo-dark.svg"
- *         lightModeLogo="https://example.com/logo-light.svg"
- *         title="My Custom CRM"
- *         lightTheme={{
- *             ...defaultTheme,
- *             palette: {
- *                 primary: { main: '#0000ff' },
- *             },
- *         }}
- *     />
- * );
- *
- * export default App;
- */
 export const CRM = ({
   companySectors = defaultCompanySectors,
   currency = defaultCurrency,
@@ -146,8 +106,6 @@ export const CRM = ({
     img.src = `https://atomic-crm-telemetry.marmelab.com/atomic-crm-telemetry?domain=${window.location.hostname}`;
   }, [disableTelemetry]);
 
-  // Seed the store with CRM prop values if not already stored
-  // (backwards compatibility for prop-based config)
   useEffect(() => {
     if (!store.getItem(CONFIGURATION_STORE_KEY)) {
       store.setItem(CONFIGURATION_STORE_KEY, {
@@ -168,8 +126,6 @@ export const CRM = ({
 
   const isMobile = useIsMobile();
 
-  // on login, pre-fetch the configuration to avoid a flickering
-  // when accessing the app for the first time
   const wrappedAuthProvider = useMemo<AuthProvider>(
     () => ({
       ...authProvider,
@@ -187,9 +143,7 @@ export const CRM = ({
       },
       handleCallback: async (params: any) => {
         if (!authProvider.handleCallback) {
-          throw new Error(
-            "handleCallback is not implemented in the authProvider",
-          );
+          throw new Error("handleCallback is not implemented in the authProvider");
         }
         const result = await authProvider.handleCallback(params);
         try {
@@ -235,44 +189,46 @@ const DesktopAdmin = (
     dashboard?: DashboardComponent;
     layout?: LayoutComponent;
   },
-) => {
-  return (
-    <Admin
-      layout={props.layout ?? Layout}
-      dashboard={props.dashboard ?? Dashboard}
-      {...props}
-    >
-      <CustomRoutes noLayout>
-        <Route path={SignupPage.path} element={<SignupPage />} />
-        <Route
-          path={ConfirmationRequired.path}
-          element={<ConfirmationRequired />}
-        />
-        <Route path={SetPasswordPage.path} element={<SetPasswordPage />} />
-        <Route
-          path={ForgotPasswordPage.path}
-          element={<ForgotPasswordPage />}
-        />
-        <Route path={OAuthConsentPage.path} element={<OAuthConsentPage />} />
-      </CustomRoutes>
+) => (
+  <Admin
+    layout={props.layout ?? Layout}
+    dashboard={props.dashboard ?? Dashboard}
+    {...props}
+  >
+    <CustomRoutes noLayout>
+      <Route path={SignupPage.path} element={<SignupPage />} />
+      <Route path={ConfirmationRequired.path} element={<ConfirmationRequired />} />
+      <Route path={SetPasswordPage.path} element={<SetPasswordPage />} />
+      <Route path={ForgotPasswordPage.path} element={<ForgotPasswordPage />} />
+      <Route path={OAuthConsentPage.path} element={<OAuthConsentPage />} />
+    </CustomRoutes>
 
-      <CustomRoutes>
-        <Route path={ProfilePage.path} element={<ProfilePage />} />
-        <Route path={SettingsPage.path} element={<SettingsPage />} />
-        <Route path={ImportPage.path} element={<ImportPage />} />
-        <Route path={ChangelogPage.path} element={<ChangelogPage />} />
-      </CustomRoutes>
-      <Resource name="deals" {...deals} />
-      <Resource name="contacts" {...contacts} />
-      <Resource name="companies" {...companies} />
-      <Resource name="contact_notes" />
-      <Resource name="deal_notes" />
-      <Resource name="tasks" />
-      <Resource name="sales" {...sales} />
-      <Resource name="tags" />
-    </Admin>
-  );
-};
+    <CustomRoutes>
+      <Route path={ProfilePage.path} element={<ProfilePage />} />
+      <Route path={SettingsPage.path} element={<SettingsPage />} />
+      <Route path={ImportPage.path} element={<ImportPage />} />
+      <Route path={ChangelogPage.path} element={<ChangelogPage />} />
+    </CustomRoutes>
+    <Resource name="deals" {...deals} />
+    <Resource name="contacts" {...contacts} />
+    <Resource name="companies" {...companies} />
+    <Resource
+      name="products"
+      {...products}
+      options={{ label: "Produtos/Serviços" }}
+    />
+    <Resource
+      name="lead_sources"
+      {...leadSources}
+      options={{ label: "Origens de Lead" }}
+    />
+    <Resource name="contact_notes" />
+    <Resource name="deal_notes" />
+    <Resource name="tasks" />
+    <Resource name="sales" {...sales} />
+    <Resource name="tags" />
+  </Admin>
+);
 
 const MobileAdmin = (
   props: CoreAdminProps & {
@@ -283,7 +239,7 @@ const MobileAdmin = (
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        gcTime: 1000 * 60 * 60 * 24, // 24 hours
+        gcTime: 1000 * 60 * 60 * 24,
         networkMode: "offlineFirst",
       },
       mutations: {
@@ -308,22 +264,13 @@ const MobileAdmin = (
       >
         <CustomRoutes noLayout>
           <Route path={SignupPage.path} element={<SignupPage />} />
-          <Route
-            path={ConfirmationRequired.path}
-            element={<ConfirmationRequired />}
-          />
+          <Route path={ConfirmationRequired.path} element={<ConfirmationRequired />} />
           <Route path={SetPasswordPage.path} element={<SetPasswordPage />} />
-          <Route
-            path={ForgotPasswordPage.path}
-            element={<ForgotPasswordPage />}
-          />
+          <Route path={ForgotPasswordPage.path} element={<ForgotPasswordPage />} />
           <Route path={OAuthConsentPage.path} element={<OAuthConsentPage />} />
         </CustomRoutes>
         <CustomRoutes>
-          <Route
-            path={SettingsPageMobile.path}
-            element={<SettingsPageMobile />}
-          />
+          <Route path={SettingsPageMobile.path} element={<SettingsPageMobile />} />
           <Route path={ChangelogPage.path} element={<ChangelogPage />} />
         </CustomRoutes>
         <Resource
