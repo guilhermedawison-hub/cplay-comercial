@@ -15,11 +15,13 @@ test("user onboarding", async ({ page, isMobile, menu, dismissToast }) => {
   await expect(page.getByText("Visão comercial")).toBeVisible();
 
   await menu.goToContacts();
-  await page
-    .getByRole(isMobile ? "button" : "link", {
-      name: /Add contact|Adicionar contato/,
-    })
-    .click();
+  if (isMobile) {
+    await page.getByRole("button", { name: /Create|Criar/ }).click();
+    await page.getByRole("menuitem", { name: "Contato" }).click();
+  } else {
+    await page.getByRole("link", { name: "Criar contato" }).click();
+  }
+
   await page.waitForLoadState("networkidle");
   await page.getByLabel("She/Her").click();
   await page.getByLabel(/First name|Nome/).fill("Jane");
