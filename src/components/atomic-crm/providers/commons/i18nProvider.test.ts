@@ -1,13 +1,10 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { getInitialLocale, i18nProvider } from "./i18nProvider";
 
-afterEach(() => {
-  vi.unstubAllGlobals();
-});
-
 describe("i18nProvider", () => {
-  it("registers en and fr locales", () => {
+  it("registers pt-BR, en and fr locales", () => {
     expect(i18nProvider.getLocales?.()).toEqual([
+      { locale: "pt-BR", name: "Português (Brasil)" },
       { locale: "en", name: "English" },
       { locale: "fr", name: "Français" },
     ]);
@@ -45,21 +42,7 @@ describe("i18nProvider", () => {
     );
   });
 
-  it("uses browser french locale when available", () => {
-    vi.stubGlobal("navigator", {
-      language: "fr-FR",
-      languages: ["fr-FR", "en-US"],
-    });
-
-    expect(getInitialLocale()).toBe("fr");
-  });
-
-  it("falls back to english when browser locale is unsupported", () => {
-    vi.stubGlobal("navigator", {
-      language: "es-ES",
-      languages: ["es-ES", "pt-BR"],
-    });
-
-    expect(getInitialLocale()).toBe("en");
+  it("uses pt-BR as the CPlay initial locale", () => {
+    expect(getInitialLocale()).toBe("pt-BR");
   });
 });
