@@ -33,6 +33,7 @@ export const DealCreate = ({ open }: { open: boolean }) => {
 
   const onSuccess = async (deal: Deal) => {
     if (!allDeals) {
+      await queryClient.invalidateQueries({ queryKey: ["deals", "getList"] });
       redirect("/deals");
       return;
     }
@@ -67,6 +68,7 @@ export const DealCreate = ({ open }: { open: boolean }) => {
       },
       { updatedAt: now },
     );
+    await queryClient.invalidateQueries({ queryKey: ["deals", "getList"] });
     redirect("/deals");
   };
 
