@@ -40,7 +40,6 @@ jobs:
             - name: 🔬 Lint
               uses: wearerequired/lint-action@v2
               with:
-                  auto_fix: true
                   eslint: true
                   eslint_args: "**/*.{mjs,ts,tsx}"
                   prettier: true
