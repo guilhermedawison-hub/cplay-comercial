@@ -1,5 +1,8 @@
 export const cplayBrand = { title: "CPlay Comercial" } as const;
 
+export const cplayCurrency = "BRL";
+export const cplayDealPipelineStatuses = ["fechado"];
+
 export const cplayDealStages = [
   { value: "novo", label: "Novo" },
   { value: "contatado", label: "Contatado" },
