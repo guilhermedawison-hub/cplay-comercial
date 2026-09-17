@@ -4,12 +4,19 @@ import { ErrorBoundary } from "react-error-boundary";
 import { Notification } from "@/components/admin/notification";
 import { Error } from "@/components/admin/error";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MobileLayout } from "@/components/atomic-crm/layout/MobileLayout";
 import { useConfigurationLoader } from "@/components/atomic-crm/root/useConfigurationLoader";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { CPlayHeader } from "./CPlayHeader";
 import { CPlaySidebar } from "./CPlaySidebar";
 
 export const CPlayLayout = ({ children }: { children: ReactNode }) => {
+  const isMobile = useIsMobile();
   useConfigurationLoader();
+
+  if (isMobile) {
+    return <MobileLayout>{children}</MobileLayout>;
+  }
 
   return (
     <div className="min-h-dvh bg-background text-foreground">
