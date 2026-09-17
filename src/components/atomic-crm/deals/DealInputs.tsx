@@ -234,7 +234,7 @@ const ProductPriceSync = () => {
       return;
     }
 
-    if (!product || product.id !== productId) return;
+    if (!product || String(product.id) !== String(productId)) return;
     if (appliedProductId.current === productId) return;
 
     appliedProductId.current = productId;
