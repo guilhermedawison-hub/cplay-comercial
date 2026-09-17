@@ -1,7 +1,10 @@
 import { RefreshButton } from "@/components/admin/refresh-button";
 import { ThemeModeToggle } from "@/components/admin/theme-mode-toggle";
 import { UserMenu } from "@/components/admin/user-menu";
-import { useLocation } from "react-router";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { Settings, User } from "lucide-react";
+import { useUserMenu } from "ra-core";
+import { Link, useLocation } from "react-router";
 
 const getPageTitle = (pathname: string) => {
   if (pathname === "/") return "Dashboard";
@@ -11,7 +14,30 @@ const getPageTitle = (pathname: string) => {
   if (pathname.startsWith("/products")) return "Produtos/Serviços";
   if (pathname.startsWith("/lead_sources")) return "Origens";
   if (pathname.startsWith("/settings")) return "Configurações";
+  if (pathname.startsWith("/profile")) return "Perfil";
   return "CPlay Comercial";
+};
+
+const UserMenuLink = ({
+  to,
+  label,
+  icon: Icon,
+}: {
+  to: string;
+  label: string;
+  icon: typeof User;
+}) => {
+  const menu = useUserMenu();
+  if (!menu) throw new Error("UserMenuLink must be used inside UserMenu");
+
+  return (
+    <DropdownMenuItem asChild onClick={menu.onClose}>
+      <Link to={to} className="flex items-center gap-2">
+        <Icon className="h-4 w-4" aria-hidden="true" />
+        {label}
+      </Link>
+    </DropdownMenuItem>
+  );
 };
 
 export const CPlayHeader = () => {
@@ -33,7 +59,10 @@ export const CPlayHeader = () => {
         <div className="flex items-center gap-1">
           <ThemeModeToggle />
           <RefreshButton />
-          <UserMenu />
+          <UserMenu>
+            <UserMenuLink to="/profile" label="Perfil" icon={User} />
+            <UserMenuLink to="/settings" label="Configurações" icon={Settings} />
+          </UserMenu>
         </div>
       </div>
     </header>
