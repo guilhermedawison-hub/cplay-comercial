@@ -31,12 +31,11 @@ test("user onboarding", async ({ page, isMobile, menu, dismissToast }) => {
   await page.getByPlaceholder("Search").fill("Smith Corp");
   await page.getByText("Create Smith Corp").click();
 
-  await page.locator(".button-add-email_jsonb").click();
-  await page.getByPlaceholder(/E-mail|Email/).fill("jane@smithcorp.com");
-
-  await page.locator(".button-add-phone_jsonb").click();
   await page
-    .getByPlaceholder(/Phone number|WhatsApp\/Telefone/)
+    .locator('input[name="email_jsonb.0.email"]')
+    .fill("jane@smithcorp.com");
+  await page
+    .locator('input[name="phone_jsonb.0.number"]')
     .fill("+1234567890");
 
   await page
