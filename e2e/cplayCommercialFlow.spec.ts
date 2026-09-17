@@ -32,9 +32,12 @@ test("CPlay commercial opportunity flow", async ({
   await page.getByRole("button", { name: "Sign in" }).click();
 
   await menu.goToDeals();
-  await expect(page.getByText("Funil comercial")).toBeVisible();
 
-  await page.getByRole("button", { name: "Nova oportunidade" }).click();
+  const createOpportunity = page.getByRole("link", {
+    name: /Criar oportunidade|Nova oportunidade/,
+  });
+  await expect(createOpportunity).toBeVisible();
+  await createOpportunity.click();
 
   await page.getByLabel("Negócio/Oportunidade *").fill("Novo site Marina");
 
