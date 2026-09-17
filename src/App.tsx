@@ -1,4 +1,5 @@
 import { CRM } from "@/components/atomic-crm/root/CRM";
+import { cplayBrand, cplayDealStages } from "@/cplay/config";
 
 /**
  * CPlay Comercial application entry point.
@@ -7,6 +8,8 @@ import { CRM } from "@/components/atomic-crm/root/CRM";
  * keep upstream compatibility while applying CPlay-specific configuration
  * from this application layer.
  */
-const App = () => <CRM title="CPlay Comercial" />;
+const App = () => (
+  <CRM title={cplayBrand.title} dealStages={[...cplayDealStages]} />
+);
 
 export default App;
