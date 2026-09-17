@@ -69,7 +69,7 @@ export const DealCardContent = ({
                 ) : (
                   <ReferenceField
                     source="primary_contact_id"
-                    reference="contacts_summary"
+                    reference="contacts"
                     link={false}
                   >
                     <ContactName />
@@ -85,7 +85,7 @@ export const DealCardContent = ({
                   <span className="truncate">
                     <ReferenceField
                       source="primary_contact_id"
-                      reference="contacts_summary"
+                      reference="contacts"
                       link={false}
                     >
                       <ContactName />
