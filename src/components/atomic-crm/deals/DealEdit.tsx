@@ -17,6 +17,7 @@ import { FormToolbar } from "../layout/FormToolbar";
 import { CompanyAvatar } from "../companies/CompanyAvatar";
 import type { Contact, Deal } from "../types";
 import { DealInputs } from "./DealInputs";
+import { normalizeDealFormData } from "./normalizeDealFormData";
 
 export const DealEdit = ({ open, id }: { open: boolean; id?: string }) => {
   const redirect = useRedirect();
@@ -34,6 +35,7 @@ export const DealEdit = ({ open, id }: { open: boolean; id?: string }) => {
         {id ? (
           <EditBase
             id={id}
+            transform={normalizeDealFormData}
             mutationMode="pessimistic"
             mutationOptions={{
               onSuccess: () => {
