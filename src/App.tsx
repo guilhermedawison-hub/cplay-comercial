@@ -1,4 +1,5 @@
 import { CRM } from "@/components/atomic-crm/root/CRM";
+import { CPlayDashboard } from "@/components/cplay/dashboard/CPlayDashboard";
 import { CPlayLayout } from "@/components/cplay/layout/CPlayLayout";
 import {
   cplayBrand,
@@ -21,6 +22,7 @@ const App = () => (
     dealPipelineStatuses={cplayDealPipelineStatuses}
     dealStages={[...cplayDealStages]}
     layout={CPlayLayout}
+    dashboard={CPlayDashboard}
   />
 );
 
