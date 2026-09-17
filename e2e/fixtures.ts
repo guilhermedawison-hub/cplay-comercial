@@ -219,6 +219,22 @@ async function createProduct({
   return data;
 }
 
+async function getDealByName(name: string) {
+  const { data, error } = await adminSupabase
+    .from("deals")
+    .select(
+      "id, name, stage, primary_contact_id, contact_ids, product_id, amount, sales_id",
+    )
+    .eq("name", name)
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to fetch deal: ${error.message}`);
+  }
+
+  return data;
+}
+
 const getMenuMethod = ({ page }: { page: Page; isMobile: boolean }) => ({
   goToDashboard: async () => {
     await page.getByRole("link", { name: "Dashboard" }).click();
@@ -248,6 +264,7 @@ export const test = base.extend<{
   createContact: typeof createContact;
   createNotes: typeof createNotes;
   createProduct: typeof createProduct;
+  getDealByName: typeof getDealByName;
   menu: ReturnType<typeof getMenuMethod>;
   dismissToast: (content: string) => Promise<void>;
 }>({
@@ -282,6 +299,10 @@ export const test = base.extend<{
   // eslint-disable-next-line no-empty-pattern
   createProduct: async ({}, cb) => {
     await cb(createProduct);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  getDealByName: async ({}, cb) => {
+    await cb(getDealByName);
   },
   menu: async ({ page, isMobile }, cb) => {
     await cb(getMenuMethod({ page, isMobile }));
