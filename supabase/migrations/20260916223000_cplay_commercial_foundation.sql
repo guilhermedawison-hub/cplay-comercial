@@ -31,6 +31,12 @@ alter table public.deals
   add column if not exists next_follow_up_type text,
   add column if not exists next_follow_up_note text;
 
+update public.deals
+set primary_contact_id = contact_ids[1]
+where primary_contact_id is null
+  and contact_ids is not null
+  and cardinality(contact_ids) > 0;
+
 do $$
 begin
   if not exists (select 1 from pg_constraint where conname = 'deals_product_id_fkey') then
