@@ -1,5 +1,7 @@
+import type { Identifier } from "ra-core";
+
 export type CPlayProduct = {
-  id: number;
+  id: Identifier;
   name: string;
   category: string | null;
   description: string | null;
@@ -10,7 +12,7 @@ export type CPlayProduct = {
 };
 
 export type CPlayLeadSource = {
-  id: number;
+  id: Identifier;
   name: string;
   active: boolean;
   display_order: number;
