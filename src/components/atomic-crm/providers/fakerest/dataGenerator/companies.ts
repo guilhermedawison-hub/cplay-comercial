@@ -37,6 +37,7 @@ export const generateCompanies = (db: Db, size = 55): Required<Company>[] => {
       address: address.streetAddress(),
       zipcode: address.zipCode(),
       city: address.city(),
+      neighborhood: "",
       state_abbr: address.stateAbbr(),
       nb_contacts: 0,
       nb_deals: 0,
