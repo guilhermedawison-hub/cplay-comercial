@@ -3,8 +3,9 @@ import { test, expect } from "./fixtures";
 test("user onboarding", async ({ page, isMobile, menu, dismissToast }) => {
   await page.goto("/");
 
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Atomic CRM/);
+  // The public/onboarding shell still comes from Atomic CRM while the authenticated
+  // application is branded as CPlay Comercial.
+  await expect(page).toHaveTitle(/CPlay Comercial|Atomic CRM/);
   await expect(page.getByText("Welcome to Atomic CRM")).toBeVisible();
 
   await page.getByLabel("First name").fill("John");
@@ -16,50 +17,54 @@ test("user onboarding", async ({ page, isMobile, menu, dismissToast }) => {
   await expect(page.getByText("What's next?")).toBeVisible();
   await expect(page.getByText("1/3 done")).toBeVisible();
   await expect(page.getByText("Install Atomic CRM")).toBeVisible();
-  await expect(page.getByText("Add your first contact")).toBeVisible();
+  await expect(page.getByText("Adicionar primeiro contato")).toBeVisible();
   await expect(page.getByText("Add your first note")).toBeVisible();
   await expect(page.getByRole("button", { name: "Import data" })).toBeVisible();
 
   await page
-    .getByRole(isMobile ? "button" : "link", { name: "Add contact" })
+    .getByRole(isMobile ? "button" : "link", {
+      name: /Add contact|Adicionar contato/,
+    })
     .click();
   await page.waitForLoadState("networkidle");
   await page.getByLabel("She/Her").click();
-  await page.getByLabel("First name").fill("Jane");
-  await page.getByLabel("Last name").fill("Smith");
-  await page.getByLabel("Title").fill("CEO");
-  await page.getByLabel("Company").click();
+  await page.getByLabel(/First name|Nome/).fill("Jane");
+  await page.getByLabel(/Last name|Sobrenome/).fill("Smith");
+  await page.getByLabel(/Title|Cargo\/Função/).fill("CEO");
+  await page.getByLabel(/Company|Empresa/).click();
   await page.getByPlaceholder("Search").fill("Smith Corp");
   await page.getByText("Create Smith Corp").click();
   await page
-    .getByRole("group", { name: "Email addresses" })
-    .getByRole("textbox", { name: "Email" })
+    .getByRole("group", { name: /Email addresses|E-mails/ })
+    .getByRole("textbox", { name: /Email/ })
     .fill("jane@smithcorp.com");
   await page
-    .getByRole("group", { name: "Email addresses" })
+    .getByRole("group", { name: /Email addresses|E-mails/ })
     .getByRole("button", { name: "Add" })
     .click();
 
   await page
-    .getByRole("group", { name: "Phone numbers" })
-    .getByRole("textbox", { name: "Phone number" })
+    .getByRole("group", { name: /Phone numbers|Telefones/ })
+    .getByRole("textbox", { name: /Phone number|WhatsApp\/Telefone/ })
     .fill("+1234567890");
   await page
-    .getByRole("group", { name: "Phone numbers" })
+    .getByRole("group", { name: /Phone numbers|Telefones/ })
     .getByRole("button", { name: "Add" })
     .click();
 
   await page
-    .getByLabel("LinkedIn URL")
+    .getByLabel(/LinkedIn URL|LinkedIn/)
     .fill("https://www.linkedin.com/in/jane-smith");
 
   await page
-    .getByLabel("Background info (bio, how you met, etc)")
+    .getByLabel(/Background info \(bio, how you met, etc\)|Observações/)
     .fill("Met at a conference.");
 
-  await page.getByLabel("Has newsletter").check();
+  await page.getByLabel(/Has newsletter|Recebe newsletter/).check();
 
-  await expect(page.getByLabel("Account manager *")).toHaveText("John Doe");
+  await expect(page.getByLabel(/Account manager \*|Responsável \*/)).toHaveText(
+    "John Doe",
+  );
 
   await page.getByRole("button", { name: "Save" }).click();
 
