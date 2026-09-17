@@ -44,6 +44,7 @@ jobs:
                   eslint_args: "**/*.{mjs,ts,tsx}"
                   prettier: true
                   prettier_args: "--config ./.prettierrc.json \"**/*.{js,json,ts,tsx,css,md,html}\""
+                  auto_fix: true
 
     typecheck:
         name: 🏷️ Typecheck
