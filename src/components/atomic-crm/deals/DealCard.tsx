@@ -1,6 +1,6 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { BriefcaseBusiness, CalendarClock, UserRound } from "lucide-react";
-import { useRedirect, RecordContextProvider, useRecordContext } from "ra-core";
+import {\n  useGetOne,\n  useRedirect,\n  RecordContextProvider,\n  useRecordContext,\n} from "ra-core";
 import { ReferenceField } from "@/components/admin/reference-field";
 import { NumberField } from "@/components/admin/number-field";
 import { Card, CardContent } from "@/components/ui/card";
