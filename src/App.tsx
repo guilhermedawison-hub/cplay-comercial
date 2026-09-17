@@ -1,4 +1,5 @@
 import { CRM } from "@/components/atomic-crm/root/CRM";
+import { CPlayLayout } from "@/components/cplay/layout/CPlayLayout";
 import {
   cplayBrand,
   cplayCurrency,
@@ -11,7 +12,7 @@ import {
  *
  * The Atomic CRM core remains isolated under components/atomic-crm so we can
  * keep upstream compatibility while applying CPlay-specific configuration
- * from this application layer.
+ * and presentation from this application layer.
  */
 const App = () => (
   <CRM
@@ -19,6 +20,7 @@ const App = () => (
     currency={cplayCurrency}
     dealPipelineStatuses={cplayDealPipelineStatuses}
     dealStages={[...cplayDealStages]}
+    layout={CPlayLayout}
   />
 );
 
