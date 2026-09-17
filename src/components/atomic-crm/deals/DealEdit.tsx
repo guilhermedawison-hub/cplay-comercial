@@ -15,7 +15,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 import { FormToolbar } from "../layout/FormToolbar";
 import { CompanyAvatar } from "../companies/CompanyAvatar";
-import type { Deal } from "../types";
+import type { Contact, Deal } from "../types";
 import { DealInputs } from "./DealInputs";
 
 export const DealEdit = ({ open, id }: { open: boolean; id?: string }) => {
@@ -60,18 +60,31 @@ function EditHeader() {
   const translate = useTranslate();
   const { defaultTitle } = useEditContext<Deal>();
   const deal = useRecordContext<Deal>();
-  if (!deal) {
-    return null;
-  }
+  if (!deal) return null;
 
   return (
     <DialogTitle className="pb-0">
       <div className="flex justify-between items-start mb-8">
         <div className="flex items-center gap-4">
-          <ReferenceField source="company_id" reference="companies" link="show">
-            <CompanyAvatar />
-          </ReferenceField>
-          <h2 className="text-2xl font-semibold">{defaultTitle}</h2>
+          {deal.company_id ? (
+            <ReferenceField source="company_id" reference="companies" link="show">
+              <CompanyAvatar />
+            </ReferenceField>
+          ) : null}
+          <div>
+            <h2 className="text-2xl font-semibold">{defaultTitle}</h2>
+            {!deal.company_id && deal.primary_contact_id ? (
+              <div className="text-sm text-muted-foreground">
+                <ReferenceField
+                  source="primary_contact_id"
+                  reference="contacts_summary"
+                  link="show"
+                >
+                  <ContactName />
+                </ReferenceField>
+              </div>
+            ) : null}
+          </div>
         </div>
         <div className="flex gap-2 pr-12">
           <DeleteButton />
@@ -85,3 +98,9 @@ function EditHeader() {
     </DialogTitle>
   );
 }
+
+const ContactName = () => {
+  const contact = useRecordContext<Contact>();
+  if (!contact) return null;
+  return <>{`${contact.first_name ?? ""} ${contact.last_name ?? ""}`.trim()}</>;
+};
