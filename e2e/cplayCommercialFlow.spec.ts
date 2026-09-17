@@ -5,6 +5,7 @@ test("CPlay commercial opportunity flow", async ({
   createSales,
   createContact,
   createProduct,
+  getDealByName,
   menu,
 }) => {
   const sales = await createSales({
@@ -14,14 +15,14 @@ test("CPlay commercial opportunity flow", async ({
     password: "password",
   });
 
-  await createContact({
+  const contact = await createContact({
     first_name: "Marina",
     last_name: "Silva",
     sales_id: sales.id,
     company_id: null,
   });
 
-  await createProduct({
+  const product = await createProduct({
     name: "Site Institucional",
     basePrice: 149.9,
   });
@@ -55,6 +56,12 @@ test("CPlay commercial opportunity flow", async ({
 
   await page.getByRole("button", { name: "Save" }).click();
   await page.waitForLoadState("networkidle");
+
+  const persistedDeal = await getDealByName("Novo site Marina");
+  expect(Number(persistedDeal.primary_contact_id)).toBe(Number(contact.id));
+  expect(persistedDeal.contact_ids?.map(Number)).toContain(Number(contact.id));
+  expect(Number(persistedDeal.product_id)).toBe(Number(product.id));
+  expect(Number(persistedDeal.amount)).toBeCloseTo(199.9, 2);
 
   const newStage = page.getByRole("region", { name: "Novo" });
   await expect(newStage.getByText("Marina Silva")).toBeVisible();
