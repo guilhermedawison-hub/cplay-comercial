@@ -109,6 +109,8 @@ export const DealCreate = ({ open }: { open: boolean }) => {
                 key={String(identity.id)}
                 defaultValues={{
                   sales_id: identity.id,
+                  stage: "novo",
+                  expected_closing_date: new Date().toISOString().split("T")[0],
                   contact_ids: [],
                   index: 0,
                 }}
