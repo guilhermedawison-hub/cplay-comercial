@@ -32,7 +32,7 @@ test("user onboarding", async ({ page, isMobile, menu, dismissToast }) => {
   await page.getByText("Create Smith Corp").click();
 
   await page.locator(".button-add-email_jsonb").click();
-  await page.getByPlaceholder(/Email/).fill("jane@smithcorp.com");
+  await page.getByPlaceholder(/E-mail|Email/).fill("jane@smithcorp.com");
 
   await page.locator(".button-add-phone_jsonb").click();
   await page
