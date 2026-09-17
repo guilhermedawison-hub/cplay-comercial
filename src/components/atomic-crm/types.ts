@@ -105,7 +105,7 @@ export type ContactNote = {
 
 export type Deal = {
   name: string;
-  company_id?: Identifier | null;
+  company_id: Identifier;
   contact_ids: Identifier[];
   primary_contact_id?: Identifier | null;
   product_id?: Identifier | null;
