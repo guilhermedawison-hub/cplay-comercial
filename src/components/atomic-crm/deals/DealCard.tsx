@@ -1,13 +1,11 @@
 import { Draggable } from "@hello-pangea/dnd";
-import { useRedirect, RecordContextProvider } from "ra-core";
+import { useRedirect, RecordContextProvider, useRecordContext } from "ra-core";
 import { ReferenceField } from "@/components/admin/reference-field";
 import { NumberField } from "@/components/admin/number-field";
-import { SelectField } from "@/components/admin/select-field";
 import { Card, CardContent } from "@/components/ui/card";
 
-import { CompanyAvatar } from "../companies/CompanyAvatar";
 import { useConfigurationContext } from "../root/ConfigurationContext";
-import type { Deal } from "../types";
+import type { Contact, Deal, Sale } from "../types";
 
 export const DealCard = ({ deal, index }: { deal: Deal; index: number }) => {
   if (!deal) return null;
@@ -30,8 +28,9 @@ export const DealCardContent = ({
   snapshot?: any;
   deal: Deal;
 }) => {
-  const { dealCategories, currency } = useConfigurationContext();
+  const { currency } = useConfigurationContext();
   const redirect = useRedirect();
+
   const handleClick = () => {
     redirect(`/deals/${deal.id}/show`, undefined, undefined, undefined, {
       _scrollToTop: false,
@@ -54,47 +53,94 @@ export const DealCardContent = ({
               : "shadow-sm hover:shadow-md"
           }`}
         >
-          <CardContent className="px-3 flex flex-col">
-            <div className="flex-1 flex">
-              <p className="flex-1 text-sm font-medium mb-2">
-                <ReferenceField
-                  source="company_id"
-                  reference="companies"
-                  link={false}
-                />
-                {" - "}
-                {deal.name}
+          <CardContent className="px-3 flex flex-col gap-2">
+            <div>
+              <p className="text-sm font-semibold leading-tight">
+                {deal.company_id ? (
+                  <ReferenceField source="company_id" reference="companies" link={false} />
+                ) : (
+                  <ReferenceField
+                    source="primary_contact_id"
+                    reference="contacts_summary"
+                    link={false}
+                  >
+                    <ContactName />
+                  </ReferenceField>
+                )}
               </p>
-              <ReferenceField
-                source="company_id"
-                reference="companies"
-                link={false}
-              >
-                <CompanyAvatar width={20} height={20} />
-              </ReferenceField>
+              {deal.company_id && deal.primary_contact_id ? (
+                <p className="text-xs text-muted-foreground mt-1">
+                  <ReferenceField
+                    source="primary_contact_id"
+                    reference="contacts_summary"
+                    link={false}
+                  >
+                    <ContactName />
+                  </ReferenceField>
+                </p>
+              ) : null}
             </div>
-            <p className="text-xs text-muted-foreground">
-              <NumberField
-                source="amount"
-                options={{
-                  notation: "compact",
-                  style: "currency",
-                  currency,
-                  currencyDisplay: "narrowSymbol",
-                  minimumSignificantDigits: 3,
-                }}
-              />
-              {deal.category && ", "}
-              <SelectField
-                source="category"
-                choices={dealCategories}
-                optionText="label"
-                optionValue="value"
-              />
-            </p>
+
+            <div className="text-xs">
+              <span className="text-muted-foreground">Produto: </span>
+              {deal.product_id ? (
+                <ReferenceField source="product_id" reference="products" link={false} />
+              ) : (
+                <span>Não informado</span>
+              )}
+            </div>
+
+            <div className="flex items-center justify-between gap-2 text-xs">
+              <span className="font-medium">
+                <NumberField
+                  source="amount"
+                  options={{
+                    style: "currency",
+                    currency,
+                    currencyDisplay: "narrowSymbol",
+                  }}
+                />
+              </span>
+              <span className="text-muted-foreground truncate">
+                <ReferenceField source="sales_id" reference="sales" link={false}>
+                  <SaleName />
+                </ReferenceField>
+              </span>
+            </div>
+
+            {deal.next_follow_up_at ? (
+              <div className="text-xs border-t pt-2 mt-1">
+                <span className="text-muted-foreground">Follow-up: </span>
+                <span>{formatFollowUp(deal.next_follow_up_at)}</span>
+                {deal.next_follow_up_type ? (
+                  <span className="text-muted-foreground"> · {deal.next_follow_up_type}</span>
+                ) : null}
+              </div>
+            ) : null}
           </CardContent>
         </Card>
       </RecordContextProvider>
     </div>
   );
+};
+
+const ContactName = () => {
+  const contact = useRecordContext<Contact>();
+  if (!contact) return null;
+  return <>{`${contact.first_name ?? ""} ${contact.last_name ?? ""}`.trim()}</>;
+};
+
+const SaleName = () => {
+  const sale = useRecordContext<Sale>();
+  if (!sale) return null;
+  return <>{`${sale.first_name} ${sale.last_name}`.trim()}</>;
+};
+
+const formatFollowUp = (value: string) => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("pt-BR", {
+    dateStyle: "short",
+    timeStyle: "short",
+  }).format(date);
 };
