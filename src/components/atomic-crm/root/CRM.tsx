@@ -273,6 +273,7 @@ const MobileAdmin = (
           <Route path={SettingsPageMobile.path} element={<SettingsPageMobile />} />
           <Route path={ChangelogPage.path} element={<ChangelogPage />} />
         </CustomRoutes>
+        <Resource name="deals" {...deals} />
         <Resource
           name="contacts"
           list={ContactListMobile}
