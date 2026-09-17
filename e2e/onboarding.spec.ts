@@ -34,9 +34,7 @@ test("user onboarding", async ({ page, isMobile, menu, dismissToast }) => {
   await page
     .locator('input[name="email_jsonb.0.email"]')
     .fill("jane@smithcorp.com");
-  await page
-    .locator('input[name="phone_jsonb.0.number"]')
-    .fill("+1234567890");
+  await page.locator('input[name="phone_jsonb.0.number"]').fill("+1234567890");
 
   await page
     .getByLabel(/LinkedIn URL|LinkedIn/)
