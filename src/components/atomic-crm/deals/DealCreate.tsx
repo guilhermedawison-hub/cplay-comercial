@@ -20,6 +20,7 @@ import {
 
 import type { Deal } from "../types";
 import { DealInputs } from "./DealInputs";
+import { normalizeDealFormData } from "./normalizeDealFormData";
 
 export const DealCreate = ({ open }: { open: boolean }) => {
   const redirect = useRedirect();
@@ -99,7 +100,11 @@ export const DealCreate = ({ open }: { open: boolean }) => {
           {isPending || !identity ? (
             <Skeleton className="h-56 w-full rounded-xl" />
           ) : (
-            <Create resource="deals" mutationOptions={{ onSuccess }}>
+            <Create
+              resource="deals"
+              transform={normalizeDealFormData}
+              mutationOptions={{ onSuccess }}
+            >
               <Form
                 key={String(identity.id)}
                 defaultValues={{
