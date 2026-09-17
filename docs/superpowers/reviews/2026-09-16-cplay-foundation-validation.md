@@ -35,4 +35,8 @@ Esta revisão cobre a fundação aprovada em `docs/superpowers/specs/2026-09-16-
 - confirmar responsável comercial obrigatório
 - confirmar follow-up principal com histórico
 
+## CI
+
+GitHub Actions foi habilitado no fork em 2026-09-16. Esta atualização existe para gerar um novo evento de sincronização do PR e disparar a pipeline de validação.
+
 Nenhum merge deve ser feito até a pipeline e a revisão final estarem concluídas.
