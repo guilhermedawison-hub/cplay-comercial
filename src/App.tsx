@@ -1,5 +1,10 @@
 import { CRM } from "@/components/atomic-crm/root/CRM";
-import { cplayBrand, cplayDealStages } from "@/cplay/config";
+import {
+  cplayBrand,
+  cplayCurrency,
+  cplayDealPipelineStatuses,
+  cplayDealStages,
+} from "@/cplay/config";
 
 /**
  * CPlay Comercial application entry point.
@@ -9,7 +14,12 @@ import { cplayBrand, cplayDealStages } from "@/cplay/config";
  * from this application layer.
  */
 const App = () => (
-  <CRM title={cplayBrand.title} dealStages={[...cplayDealStages]} />
+  <CRM
+    title={cplayBrand.title}
+    currency={cplayCurrency}
+    dealPipelineStatuses={cplayDealPipelineStatuses}
+    dealStages={[...cplayDealStages]}
+  />
 );
 
 export default App;
