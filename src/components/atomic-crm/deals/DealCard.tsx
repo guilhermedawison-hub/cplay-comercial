@@ -1,8 +1,11 @@
 import { Draggable } from "@hello-pangea/dnd";
+import { BriefcaseBusiness, CalendarClock, UserRound } from "lucide-react";
 import { useRedirect, RecordContextProvider, useRecordContext } from "ra-core";
 import { ReferenceField } from "@/components/admin/reference-field";
 import { NumberField } from "@/components/admin/number-field";
 import { Card, CardContent } from "@/components/ui/card";
+import { StatusBadge } from "@/components/cplay/ui/StatusBadge";
+import { getFollowUpVisualState } from "@/cplay/ui/status";
 
 import { useConfigurationContext } from "../root/ConfigurationContext";
 import type { Contact, Deal, Sale } from "../types";
@@ -30,6 +33,7 @@ export const DealCardContent = ({
 }) => {
   const { currency } = useConfigurationContext();
   const redirect = useRedirect();
+  const followUpState = getFollowUpVisualState(deal.next_follow_up_at);
 
   const handleClick = () => {
     redirect(`/deals/${deal.id}/show`, undefined, undefined, undefined, {
@@ -47,15 +51,15 @@ export const DealCardContent = ({
     >
       <RecordContextProvider value={deal}>
         <Card
-          className={`py-3 transition-all duration-200 ${
+          className={`gap-0 rounded-xl border-border/80 py-0 transition-all duration-200 ${
             snapshot?.isDragging
-              ? "opacity-90 transform rotate-1 shadow-lg"
-              : "shadow-sm hover:shadow-md"
+              ? "rotate-1 border-primary/40 opacity-95 shadow-lg"
+              : "shadow-none hover:border-primary/25 hover:shadow-sm"
           }`}
         >
-          <CardContent className="px-3 flex flex-col gap-2">
-            <div>
-              <p className="text-sm font-semibold leading-tight">
+          <CardContent className="flex flex-col gap-3 px-3.5 py-3.5">
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold leading-tight text-foreground">
                 {deal.company_id ? (
                   <ReferenceField source="company_id" reference="companies" link={false} />
                 ) : (
@@ -69,29 +73,34 @@ export const DealCardContent = ({
                 )}
               </p>
               {deal.company_id && deal.primary_contact_id ? (
-                <p className="text-xs text-muted-foreground mt-1">
-                  <ReferenceField
-                    source="primary_contact_id"
-                    reference="contacts_summary"
-                    link={false}
-                  >
-                    <ContactName />
-                  </ReferenceField>
-                </p>
+                <div className="mt-1 flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground">
+                  <UserRound className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  <span className="truncate">
+                    <ReferenceField
+                      source="primary_contact_id"
+                      reference="contacts_summary"
+                      link={false}
+                    >
+                      <ContactName />
+                    </ReferenceField>
+                  </span>
+                </div>
               ) : null}
             </div>
 
-            <div className="text-xs">
-              <span className="text-muted-foreground">Produto: </span>
-              {deal.product_id ? (
-                <ReferenceField source="product_id" reference="products" link={false} />
-              ) : (
-                <span>Não informado</span>
-              )}
+            <div className="flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground">
+              <BriefcaseBusiness className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+              <span className="truncate">
+                {deal.product_id ? (
+                  <ReferenceField source="product_id" reference="products" link={false} />
+                ) : (
+                  "Produto não informado"
+                )}
+              </span>
             </div>
 
-            <div className="flex items-center justify-between gap-2 text-xs">
-              <span className="font-medium">
+            <div className="flex items-center justify-between gap-3 border-t border-border/70 pt-2.5 text-xs">
+              <span className="font-semibold text-foreground">
                 <NumberField
                   source="amount"
                   options={{
@@ -101,22 +110,26 @@ export const DealCardContent = ({
                   }}
                 />
               </span>
-              <span className="text-muted-foreground truncate">
+              <span className="max-w-[48%] truncate text-muted-foreground">
                 <ReferenceField source="sales_id" reference="sales" link={false}>
                   <SaleName />
                 </ReferenceField>
               </span>
             </div>
 
-            {deal.next_follow_up_at ? (
-              <div className="text-xs border-t pt-2 mt-1">
-                <span className="text-muted-foreground">Follow-up: </span>
-                <span>{formatFollowUp(deal.next_follow_up_at)}</span>
-                {deal.next_follow_up_type ? (
-                  <span className="text-muted-foreground"> · {deal.next_follow_up_type}</span>
-                ) : null}
-              </div>
-            ) : null}
+            <div className="flex items-center justify-between gap-2">
+              <StatusBadge
+                tone={getFollowUpTone(followUpState)}
+                label={getFollowUpLabel(followUpState)}
+                className="max-w-full"
+              />
+              {deal.next_follow_up_at ? (
+                <span className="flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground">
+                  <CalendarClock className="h-3.5 w-3.5" aria-hidden="true" />
+                  {formatFollowUp(deal.next_follow_up_at)}
+                </span>
+              ) : null}
+            </div>
           </CardContent>
         </Card>
       </RecordContextProvider>
@@ -136,11 +149,24 @@ const SaleName = () => {
   return <>{`${sale.first_name} ${sale.last_name}`.trim()}</>;
 };
 
+const getFollowUpTone = (state: ReturnType<typeof getFollowUpVisualState>) => {
+  if (state === "overdue") return "danger" as const;
+  if (state === "due-soon") return "warning" as const;
+  return "neutral" as const;
+};
+
+const getFollowUpLabel = (state: ReturnType<typeof getFollowUpVisualState>) => {
+  if (state === "overdue") return "Follow-up vencido";
+  if (state === "due-soon") return "Follow-up próximo";
+  if (state === "scheduled") return "Follow-up agendado";
+  return "Sem follow-up";
+};
+
 const formatFollowUp = (value: string) => {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
   return new Intl.DateTimeFormat("pt-BR", {
-    dateStyle: "short",
-    timeStyle: "short",
+    day: "2-digit",
+    month: "2-digit",
   }).format(date);
 };
