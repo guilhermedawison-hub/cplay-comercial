@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Form,
@@ -8,10 +7,10 @@ import {
   useRedirect,
   type GetListResult,
 } from "ra-core";
-import { useFormContext, useWatch } from "react-hook-form";
 import { Create } from "@/components/admin/create";
 import { SaveButton } from "@/components/admin/form";
 import { FormToolbar } from "@/components/admin/simple-form";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
   DialogContent,
@@ -26,6 +25,7 @@ export const DealCreate = ({ open }: { open: boolean }) => {
   const redirect = useRedirect();
   const dataProvider = useDataProvider();
   const { data: allDeals } = useListContext<Deal>();
+  const { identity, isPending } = useGetIdentity();
 
   const handleClose = () => {
     redirect("/deals");
@@ -39,9 +39,11 @@ export const DealCreate = ({ open }: { open: boolean }) => {
       redirect("/deals");
       return;
     }
+
     const deals = allDeals.filter(
       (d: Deal) => d.stage === deal.stage && d.id !== deal.id,
     );
+
     await Promise.all(
       deals.map(async (oldDeal) =>
         dataProvider.update("deals", {
@@ -51,6 +53,7 @@ export const DealCreate = ({ open }: { open: boolean }) => {
         }),
       ),
     );
+
     const dealsById = deals.reduce(
       (acc, d) => ({
         ...acc,
@@ -58,11 +61,14 @@ export const DealCreate = ({ open }: { open: boolean }) => {
       }),
       {} as { [key: string]: Deal },
     );
+
     const now = Date.now();
+
     queryClient.setQueriesData<GetListResult | undefined>(
       { queryKey: ["deals", "getList"] },
       (res) => {
         if (!res) return res;
+
         return {
           ...res,
           data: res.data.map((d: Deal) => dealsById[d.id] || d),
@@ -70,6 +76,7 @@ export const DealCreate = ({ open }: { open: boolean }) => {
       },
       { updatedAt: now },
     );
+
     await queryClient.invalidateQueries({ queryKey: ["deals", "getList"] });
     redirect("/deals");
   };
@@ -89,36 +96,27 @@ export const DealCreate = ({ open }: { open: boolean }) => {
         </div>
 
         <div className="px-5 pb-6 pt-5 sm:px-6">
-          <Create resource="deals" mutationOptions={{ onSuccess }}>
-            <Form
-              defaultValues={{
-                contact_ids: [],
-                index: 0,
-              }}
-            >
-              <CurrentSalesSync />
-              <DealInputs />
-              <FormToolbar className="mt-5 border-t border-border/70 pt-4">
-                <SaveButton />
-              </FormToolbar>
-            </Form>
-          </Create>
+          {isPending || !identity ? (
+            <Skeleton className="h-56 w-full rounded-xl" />
+          ) : (
+            <Create resource="deals" mutationOptions={{ onSuccess }}>
+              <Form
+                key={String(identity.id)}
+                defaultValues={{
+                  sales_id: identity.id,
+                  contact_ids: [],
+                  index: 0,
+                }}
+              >
+                <DealInputs />
+                <FormToolbar className="mt-5 border-t border-border/70 pt-4">
+                  <SaveButton />
+                </FormToolbar>
+              </Form>
+            </Create>
+          )}
         </div>
       </DialogContent>
     </Dialog>
   );
-};
-
-const CurrentSalesSync = () => {
-  const { identity } = useGetIdentity();
-  const { setValue } = useFormContext();
-  const salesId = useWatch({ name: "sales_id" });
-
-  useEffect(() => {
-    if (salesId == null && identity?.id != null) {
-      setValue("sales_id", identity.id, { shouldDirty: false });
-    }
-  }, [identity?.id, salesId, setValue]);
-
-  return null;
 };
