@@ -30,23 +30,14 @@ test("user onboarding", async ({ page, isMobile, menu, dismissToast }) => {
   await page.getByLabel(/Company|Empresa/).click();
   await page.getByPlaceholder("Search").fill("Smith Corp");
   await page.getByText("Create Smith Corp").click();
-  await page
-    .getByRole("group", { name: /Email addresses|E-mails/ })
-    .getByRole("textbox", { name: /Email/ })
-    .fill("jane@smithcorp.com");
-  await page
-    .getByRole("group", { name: /Email addresses|E-mails/ })
-    .getByRole("button", { name: "Add" })
-    .click();
 
+  await page.locator(".button-add-email_jsonb").click();
+  await page.getByPlaceholder(/Email/).fill("jane@smithcorp.com");
+
+  await page.locator(".button-add-phone_jsonb").click();
   await page
-    .getByRole("group", { name: /Phone numbers|Telefones/ })
-    .getByRole("textbox", { name: /Phone number|WhatsApp\/Telefone/ })
+    .getByPlaceholder(/Phone number|WhatsApp\/Telefone/)
     .fill("+1234567890");
-  await page
-    .getByRole("group", { name: /Phone numbers|Telefones/ })
-    .getByRole("button", { name: "Add" })
-    .click();
 
   await page
     .getByLabel(/LinkedIn URL|LinkedIn/)
