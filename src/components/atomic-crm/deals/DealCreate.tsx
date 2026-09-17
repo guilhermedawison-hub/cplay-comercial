@@ -25,7 +25,7 @@ import { normalizeDealFormData } from "./normalizeDealFormData";
 export const DealCreate = ({ open }: { open: boolean }) => {
   const redirect = useRedirect();
   const dataProvider = useDataProvider();
-  const { data: allDeals } = useListContext<Deal>();
+  const { data: allDeals, refetch } = useListContext<Deal>();
   const { identity, isPending } = useGetIdentity();
 
   const handleClose = () => {
@@ -37,6 +37,7 @@ export const DealCreate = ({ open }: { open: boolean }) => {
   const onSuccess = async (deal: Deal) => {
     if (!allDeals) {
       await queryClient.invalidateQueries({ queryKey: ["deals", "getList"] });
+      await refetch();
       redirect("/deals");
       return;
     }
@@ -79,6 +80,7 @@ export const DealCreate = ({ open }: { open: boolean }) => {
     );
 
     await queryClient.invalidateQueries({ queryKey: ["deals", "getList"] });
+    await refetch();
     redirect("/deals");
   };
 
