@@ -11,6 +11,7 @@ import {
 const makeDeal = (overrides: Partial<Deal>): Deal => ({
   id: 1,
   name: "Negócio",
+  company_id: 0,
   contact_ids: [],
   category: "",
   stage: "novo",
