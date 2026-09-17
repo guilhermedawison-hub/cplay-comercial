@@ -46,11 +46,11 @@ export const DealCardContent = ({
   );
 
   const primaryContactName = primaryContact
-    ? \`\${primaryContact.first_name ?? ""} \${primaryContact.last_name ?? ""}\`.trim()
+    ? `${primaryContact.first_name ?? ""} ${primaryContact.last_name ?? ""}`.trim()
     : "Contato";
 
   const handleClick = () => {
-    redirect(\`/deals/\${deal.id}/show\`, undefined, undefined, undefined, {
+    redirect(`/deals/${deal.id}/show`, undefined, undefined, undefined, {
       _scrollToTop: false,
     });
   };
@@ -65,11 +65,11 @@ export const DealCardContent = ({
     >
       <RecordContextProvider value={deal}>
         <Card
-          className={\`gap-0 rounded-xl border-border/80 py-0 transition-all duration-200 \${
+          className={`gap-0 rounded-xl border-border/80 py-0 transition-all duration-200 ${
             snapshot?.isDragging
               ? "rotate-1 border-primary/40 opacity-95 shadow-lg"
               : "shadow-none hover:border-primary/25 hover:shadow-sm"
-          }\`}
+          }`}
         >
           <CardContent className="flex flex-col gap-3 px-3.5 py-3.5">
             <div className="min-w-0">
@@ -161,7 +161,7 @@ export const DealCardContent = ({
 const SaleName = () => {
   const sale = useRecordContext<Sale>();
   if (!sale) return null;
-  return <>{\`\${sale.first_name} \${sale.last_name}\`.trim()}</>;
+  return <>{`${sale.first_name} ${sale.last_name}`.trim()}</>;
 };
 
 const getFollowUpTone = (state: ReturnType<typeof getFollowUpVisualState>) => {
