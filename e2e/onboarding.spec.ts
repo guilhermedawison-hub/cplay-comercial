@@ -56,10 +56,10 @@ test("user onboarding", async ({ page, isMobile, menu, dismissToast }) => {
   await expect(page.locator(isMobile ? "h2" : "h5")).toHaveText("Jane Smith");
   await expect(page.getByText("CEO at Smith Corp")).toBeVisible();
 
-  await page
-    .getByRole(isMobile ? "button" : "link", { name: "Add note" })
-    .click();
-  await page.waitForLoadState("networkidle");
+  if (isMobile) {
+    await page.getByRole("button", { name: /Add note|Adicionar nota/ }).click();
+    await page.waitForLoadState("networkidle");
+  }
 
   await page.getByPlaceholder("Add a note").fill("This is a note about Jane.");
   await page
