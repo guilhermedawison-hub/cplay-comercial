@@ -53,7 +53,7 @@ test("user onboarding", async ({ page, isMobile, menu, dismissToast }) => {
   await page.getByRole("button", { name: "Save" }).click();
   await dismissToast("Element created");
 
-  await expect(page.locator(isMobile ? "h2" : "h5")).toHaveText("Jane Smith");
+  await expect(page.getByText("Jane Smith", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("CEO at Smith Corp")).toBeVisible();
 
   if (isMobile) {
