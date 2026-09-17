@@ -59,6 +59,49 @@ begin
 end;
 $$;
 
+create or replace function public.log_cplay_deal_changes()
+returns trigger
+language plpgsql
+set search_path to 'public'
+as $$
+begin
+  if old.stage is distinct from new.stage then
+    insert into public.deal_notes (deal_id, type, text, date)
+    values (new.id, 'system', 'Etapa alterada de "' || coalesce(old.stage, 'não informada') || '" para "' || coalesce(new.stage, 'não informada') || '".', now());
+  end if;
+
+  if old.sales_id is distinct from new.sales_id then
+    insert into public.deal_notes (deal_id, type, text, date)
+    values (new.id, 'system', 'Responsável comercial alterado.', now());
+  end if;
+
+  if old.amount is distinct from new.amount then
+    insert into public.deal_notes (deal_id, type, text, date)
+    values (new.id, 'system', 'Valor da oportunidade alterado de ' || coalesce(old.amount::text, 'não informado') || ' para ' || coalesce(new.amount::text, 'não informado') || '.', now());
+  end if;
+
+  if old.next_follow_up_at is distinct from new.next_follow_up_at
+     or old.next_follow_up_type is distinct from new.next_follow_up_type
+     or old.next_follow_up_note is distinct from new.next_follow_up_note then
+    if old.next_follow_up_at is not null
+       or old.next_follow_up_type is not null
+       or old.next_follow_up_note is not null then
+      insert into public.deal_notes (deal_id, type, text, date)
+      values (
+        new.id,
+        'follow_up',
+        'Follow-up anterior: ' || coalesce(old.next_follow_up_at::text, 'sem data') ||
+        case when old.next_follow_up_type is not null then ' | ' || old.next_follow_up_type else '' end ||
+        case when old.next_follow_up_note is not null and old.next_follow_up_note <> '' then ' | ' || old.next_follow_up_note else '' end,
+        now()
+      );
+    end if;
+  end if;
+
+  return new;
+end;
+$$;
+
 drop trigger if exists products_set_updated_at on public.products;
 create trigger products_set_updated_at before update on public.products
 for each row execute function public.set_updated_at();
@@ -66,6 +109,10 @@ for each row execute function public.set_updated_at();
 drop trigger if exists lead_sources_set_updated_at on public.lead_sources;
 create trigger lead_sources_set_updated_at before update on public.lead_sources
 for each row execute function public.set_updated_at();
+
+drop trigger if exists cplay_deal_history on public.deals;
+create trigger cplay_deal_history after update on public.deals
+for each row execute function public.log_cplay_deal_changes();
 
 alter table public.products enable row level security;
 alter table public.lead_sources enable row level security;
@@ -89,6 +136,7 @@ drop policy if exists "Lead sources delete for authenticated users" on public.le
 create policy "Lead sources delete for authenticated users" on public.lead_sources for delete to authenticated using (true);
 
 grant all on function public.set_updated_at() to anon, authenticated, service_role;
+grant all on function public.log_cplay_deal_changes() to anon, authenticated, service_role;
 grant all on table public.products to anon, authenticated, service_role;
 grant all on table public.lead_sources to anon, authenticated, service_role;
 grant all on sequence public.products_id_seq to anon, authenticated, service_role;
