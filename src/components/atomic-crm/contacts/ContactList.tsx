@@ -14,7 +14,7 @@ import { ExportButton } from "@/components/admin/export-button";
 import { List } from "@/components/admin/list";
 import { SelectAllButton } from "@/components/admin/select-all-button";
 import { SortButton } from "@/components/admin/sort-button";
-import { Card } from "@/components/ui/card";
+import { WorkspaceCard } from "@/components/cplay/ui/WorkspaceCard";
 
 import type { Company, Contact, Sale, Tag } from "../types";
 import { BulkTagButton } from "./BulkTagButton";
@@ -39,15 +39,23 @@ export const ContactList = () => {
   if (!identity) return null;
 
   return (
-    <List
-      title={false}
-      actions={<ContactListActions />}
-      perPage={25}
-      sort={{ field: "last_seen", order: "DESC" }}
-      exporter={exporter}
-    >
-      <ContactListLayoutDesktop />
-    </List>
+    <div className="space-y-4">
+      <div>
+        <h2 className="text-xl font-semibold tracking-tight">Contatos</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Pessoas relacionadas à operação comercial, com ou sem empresa vinculada.
+        </p>
+      </div>
+      <List
+        title={false}
+        actions={<ContactListActions />}
+        perPage={25}
+        sort={{ field: "last_seen", order: "DESC" }}
+        exporter={exporter}
+      >
+        <ContactListLayoutDesktop />
+      </List>
+    </div>
   );
 };
 
@@ -61,12 +69,12 @@ const ContactListLayoutDesktop = () => {
   if (!data?.length && !hasFilters) return <ContactEmpty />;
 
   return (
-    <div className="flex flex-row gap-8">
+    <div className="flex flex-row gap-6">
       <ContactListFilter />
-      <div className="w-full flex flex-col gap-4">
-        <Card className="py-0">
+      <div className="flex w-full flex-col gap-4">
+        <WorkspaceCard className="overflow-hidden">
           <ContactListContent />
-        </Card>
+        </WorkspaceCard>
       </div>
       <BulkActionsToolbar>
         <ContactBulkActionButtons />
