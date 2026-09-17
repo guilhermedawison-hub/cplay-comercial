@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Form,
@@ -7,6 +8,7 @@ import {
   useRedirect,
   type GetListResult,
 } from "ra-core";
+import { useFormContext, useWatch } from "react-hook-form";
 import { Create } from "@/components/admin/create";
 import { SaveButton } from "@/components/admin/form";
 import { FormToolbar } from "@/components/admin/simple-form";
@@ -72,8 +74,6 @@ export const DealCreate = ({ open }: { open: boolean }) => {
     redirect("/deals");
   };
 
-  const { identity } = useGetIdentity();
-
   return (
     <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && handleClose()}>
       <DialogContent className="max-h-[92vh] overflow-y-auto p-0 sm:max-w-3xl lg:max-w-4xl">
@@ -92,11 +92,11 @@ export const DealCreate = ({ open }: { open: boolean }) => {
           <Create resource="deals" mutationOptions={{ onSuccess }}>
             <Form
               defaultValues={{
-                sales_id: identity?.id,
                 contact_ids: [],
                 index: 0,
               }}
             >
+              <CurrentSalesSync />
               <DealInputs />
               <FormToolbar className="mt-5 border-t border-border/70 pt-4">
                 <SaveButton />
@@ -107,4 +107,18 @@ export const DealCreate = ({ open }: { open: boolean }) => {
       </DialogContent>
     </Dialog>
   );
+};
+
+const CurrentSalesSync = () => {
+  const { identity } = useGetIdentity();
+  const { setValue } = useFormContext();
+  const salesId = useWatch({ name: "sales_id" });
+
+  useEffect(() => {
+    if (salesId == null && identity?.id != null) {
+      setValue("sales_id", identity.id, { shouldDirty: false });
+    }
+  }, [identity?.id, salesId, setValue]);
+
+  return null;
 };
