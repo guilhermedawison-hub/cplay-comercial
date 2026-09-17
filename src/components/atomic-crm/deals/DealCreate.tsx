@@ -10,7 +10,12 @@ import {
 import { Create } from "@/components/admin/create";
 import { SaveButton } from "@/components/admin/form";
 import { FormToolbar } from "@/components/admin/simple-form";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 import type { Deal } from "../types";
 import { DealInputs } from "./DealInputs";
@@ -72,7 +77,9 @@ export const DealCreate = ({ open }: { open: boolean }) => {
       <DialogContent className="max-h-[92vh] overflow-y-auto p-0 sm:max-w-3xl lg:max-w-4xl">
         <div className="sticky top-0 z-10 border-b bg-background/95 px-5 py-4 backdrop-blur sm:px-6">
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold">Nova oportunidade</DialogTitle>
+            <DialogTitle className="text-xl font-semibold">
+              Nova oportunidade
+            </DialogTitle>
             <p className="text-sm text-muted-foreground">
               Cadastre o negócio, defina responsável, etapa e próximo follow-up.
             </p>

@@ -1,4 +1,9 @@
-import { BriefcaseBusiness, CircleDollarSign, Clock3, Trophy } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  CircleDollarSign,
+  Clock3,
+  Trophy,
+} from "lucide-react";
 import { useGetList } from "ra-core";
 import type { Deal, Task } from "@/components/atomic-crm/types";
 import { DashboardActivityLog } from "@/components/atomic-crm/dashboard/DashboardActivityLog";
@@ -22,15 +27,21 @@ const formatCurrency = (value: number) =>
   }).format(value);
 
 export const CPlayDashboard = () => {
-  const { data: deals = [], isPending: dealsPending } = useGetList<Deal>("deals", {
-    pagination: { page: 1, perPage: 500 },
-    sort: { field: "updated_at", order: "DESC" },
-  });
+  const { data: deals = [], isPending: dealsPending } = useGetList<Deal>(
+    "deals",
+    {
+      pagination: { page: 1, perPage: 500 },
+      sort: { field: "updated_at", order: "DESC" },
+    },
+  );
 
-  const { data: tasks = [], isPending: tasksPending } = useGetList<Task>("tasks", {
-    pagination: { page: 1, perPage: 500 },
-    sort: { field: "due_date", order: "ASC" },
-  });
+  const { data: tasks = [], isPending: tasksPending } = useGetList<Task>(
+    "tasks",
+    {
+      pagination: { page: 1, perPage: 500 },
+      sort: { field: "due_date", order: "ASC" },
+    },
+  );
 
   const loading = dealsPending || tasksPending;
   const openDeals = getOpenDeals(deals);
@@ -42,13 +53,18 @@ export const CPlayDashboard = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-1">
-        <h2 className="text-2xl font-semibold tracking-tight">Visão comercial</h2>
+        <h2 className="text-2xl font-semibold tracking-tight">
+          Visão comercial
+        </h2>
         <p className="text-sm text-muted-foreground">
           Acompanhe pipeline, valor potencial e próximos movimentos da operação.
         </p>
       </div>
 
-      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Indicadores comerciais">
+      <section
+        className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"
+        aria-label="Indicadores comerciais"
+      >
         <MetricCard
           title="Oportunidades abertas"
           value={loading ? "…" : openDeals.length}
@@ -80,7 +96,9 @@ export const CPlayDashboard = () => {
           <WorkspaceCard className="p-4 sm:p-5">
             <div className="mb-4">
               <p className="text-sm font-semibold">Pipeline</p>
-              <p className="text-xs text-muted-foreground">Oportunidades priorizadas por etapa comercial.</p>
+              <p className="text-xs text-muted-foreground">
+                Oportunidades priorizadas por etapa comercial.
+              </p>
             </div>
             <DealsPipeline />
           </WorkspaceCard>
@@ -88,7 +106,9 @@ export const CPlayDashboard = () => {
           <WorkspaceCard className="p-4 sm:p-5">
             <div className="mb-4">
               <p className="text-sm font-semibold">Atividade recente</p>
-              <p className="text-xs text-muted-foreground">Histórico recente da operação comercial.</p>
+              <p className="text-xs text-muted-foreground">
+                Histórico recente da operação comercial.
+              </p>
             </div>
             <DashboardActivityLog />
           </WorkspaceCard>
@@ -97,7 +117,9 @@ export const CPlayDashboard = () => {
         <WorkspaceCard className="p-4 sm:p-5">
           <div className="mb-4">
             <p className="text-sm font-semibold">Próximas ações</p>
-            <p className="text-xs text-muted-foreground">Tarefas e retornos que exigem atenção.</p>
+            <p className="text-xs text-muted-foreground">
+              Tarefas e retornos que exigem atenção.
+            </p>
           </div>
           <TasksList />
         </WorkspaceCard>

@@ -12,11 +12,17 @@ export const DealColumn = ({
   stage: string;
   deals: Deal[];
 }) => {
-  const totalAmount = deals.reduce((sum, deal) => sum + Number(deal.amount || 0), 0);
+  const totalAmount = deals.reduce(
+    (sum, deal) => sum + Number(deal.amount || 0),
+    0,
+  );
   const { dealStages, currency } = useConfigurationContext();
 
   return (
-    <section className="w-[290px] shrink-0 pb-6" aria-label={findDealLabel(dealStages, stage)}>
+    <section
+      className="w-[290px] shrink-0 pb-6"
+      aria-label={findDealLabel(dealStages, stage)}
+    >
       <div className="mb-2 rounded-xl border border-border/70 bg-muted/35 px-3 py-2.5">
         <div className="flex items-center justify-between gap-2">
           <h3 className="truncate text-sm font-semibold text-foreground">
@@ -43,7 +49,9 @@ export const DealColumn = ({
             ref={droppableProvided.innerRef}
             {...droppableProvided.droppableProps}
             className={`flex min-h-24 flex-col gap-2 rounded-xl p-1 transition-colors ${
-              snapshot.isDraggingOver ? "bg-[var(--cplay-primary-subtle)]" : "bg-transparent"
+              snapshot.isDraggingOver
+                ? "bg-[var(--cplay-primary-subtle)]"
+                : "bg-transparent"
             }`}
           >
             {deals.map((deal, index) => (

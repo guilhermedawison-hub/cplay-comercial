@@ -5,9 +5,12 @@ export type StatusBadgeTone = "neutral" | "success" | "warning" | "danger";
 
 const toneClasses: Record<StatusBadgeTone, string> = {
   neutral: "border-border bg-muted/60 text-muted-foreground",
-  success: "border-[color:var(--cplay-success)]/20 bg-[color:var(--cplay-success)]/10 text-[color:var(--cplay-success)]",
-  warning: "border-[color:var(--cplay-warning)]/20 bg-[color:var(--cplay-warning)]/10 text-[color:var(--cplay-warning)]",
-  danger: "border-[color:var(--cplay-danger)]/20 bg-[color:var(--cplay-danger)]/10 text-[color:var(--cplay-danger)]",
+  success:
+    "border-[color:var(--cplay-success)]/20 bg-[color:var(--cplay-success)]/10 text-[color:var(--cplay-success)]",
+  warning:
+    "border-[color:var(--cplay-warning)]/20 bg-[color:var(--cplay-warning)]/10 text-[color:var(--cplay-warning)]",
+  danger:
+    "border-[color:var(--cplay-danger)]/20 bg-[color:var(--cplay-danger)]/10 text-[color:var(--cplay-danger)]",
 };
 
 const icons = {

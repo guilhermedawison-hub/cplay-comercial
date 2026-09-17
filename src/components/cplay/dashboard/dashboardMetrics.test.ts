@@ -36,9 +36,24 @@ const makeTask = (overrides: Partial<Task>): Task => ({
 
 describe("dashboardMetrics", () => {
   const deals = [
-    makeDeal({ id: 1, stage: "novo", amount: 1000, next_follow_up_at: "2026-09-17T09:00:00Z" }),
-    makeDeal({ id: 2, stage: "proposta", amount: 2500, next_follow_up_at: "2026-09-18T09:00:00Z" }),
-    makeDeal({ id: 3, stage: "fechado", amount: 5000, updated_at: "2026-09-15T12:00:00Z" }),
+    makeDeal({
+      id: 1,
+      stage: "novo",
+      amount: 1000,
+      next_follow_up_at: "2026-09-17T09:00:00Z",
+    }),
+    makeDeal({
+      id: 2,
+      stage: "proposta",
+      amount: 2500,
+      next_follow_up_at: "2026-09-18T09:00:00Z",
+    }),
+    makeDeal({
+      id: 3,
+      stage: "fechado",
+      amount: 5000,
+      updated_at: "2026-09-15T12:00:00Z",
+    }),
     makeDeal({ id: 4, stage: "perdido", amount: 700 }),
   ];
 
@@ -48,7 +63,9 @@ describe("dashboardMetrics", () => {
   });
 
   it("counts overdue follow-ups only on open deals", () => {
-    expect(getPendingFollowUps(deals, new Date("2026-09-17T12:00:00Z"))).toBe(1);
+    expect(getPendingFollowUps(deals, new Date("2026-09-17T12:00:00Z"))).toBe(
+      1,
+    );
   });
 
   it("counts deals closed in the current month", () => {
@@ -56,7 +73,10 @@ describe("dashboardMetrics", () => {
   });
 
   it("counts tasks without done_date", () => {
-    const tasks = [makeTask({ id: 1 }), makeTask({ id: 2, done_date: "2026-09-17T11:00:00Z" })];
+    const tasks = [
+      makeTask({ id: 1 }),
+      makeTask({ id: 2, done_date: "2026-09-17T11:00:00Z" }),
+    ];
     expect(getPendingTasks(tasks)).toBe(1);
   });
 });

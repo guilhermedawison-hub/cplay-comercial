@@ -24,7 +24,9 @@ const filters = [<SearchInput source="q" alwaysOn />];
 export const ProductList = () => (
   <div className="space-y-4">
     <div>
-      <h2 className="text-xl font-semibold tracking-tight">Produtos e serviços</h2>
+      <h2 className="text-xl font-semibold tracking-tight">
+        Produtos e serviços
+      </h2>
       <p className="mt-1 text-sm text-muted-foreground">
         Catálogo comercial usado nas oportunidades e propostas.
       </p>
@@ -36,8 +38,15 @@ export const ProductList = () => (
         actions={<ProductListActions />}
         sort={{ field: "display_order", order: "ASC" }}
       >
-        <DataTable<CPlayProduct> className="overflow-hidden border-border/70" rowClick="edit">
-          <DataTable.Col source="name" label="Nome" cellClassName="font-medium" />
+        <DataTable<CPlayProduct>
+          className="overflow-hidden border-border/70"
+          rowClick="edit"
+        >
+          <DataTable.Col
+            source="name"
+            label="Nome"
+            cellClassName="font-medium"
+          />
           <DataTable.Col source="category" label="Categoria" />
           <DataTable.Col
             source="base_price"

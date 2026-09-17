@@ -21,7 +21,8 @@ export const LeadSourceList = () => (
     <div>
       <h2 className="text-xl font-semibold tracking-tight">Origens de lead</h2>
       <p className="mt-1 text-sm text-muted-foreground">
-        Padronize os canais usados para identificar de onde cada oportunidade veio.
+        Padronize os canais usados para identificar de onde cada oportunidade
+        veio.
       </p>
     </div>
 
@@ -31,8 +32,15 @@ export const LeadSourceList = () => (
         actions={<LeadSourceListActions />}
         sort={{ field: "display_order", order: "ASC" }}
       >
-        <DataTable<CPlayLeadSource> className="overflow-hidden border-border/70" rowClick="edit">
-          <DataTable.Col source="name" label="Nome" cellClassName="font-medium" />
+        <DataTable<CPlayLeadSource>
+          className="overflow-hidden border-border/70"
+          rowClick="edit"
+        >
+          <DataTable.Col
+            source="name"
+            label="Nome"
+            cellClassName="font-medium"
+          />
           <DataTable.Col
             source="active"
             label="Status"

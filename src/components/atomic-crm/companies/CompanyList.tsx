@@ -20,7 +20,8 @@ export const CompanyList = () => {
       <div>
         <h2 className="text-xl font-semibold tracking-tight">Empresas</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Organizações vinculadas a contatos, oportunidades e histórico comercial.
+          Organizações vinculadas a contatos, oportunidades e histórico
+          comercial.
         </p>
       </div>
       <List

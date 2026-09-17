@@ -16,7 +16,9 @@ export const MobileLayout = ({ children }: { children: ReactNode }) => {
       <PullToRefresh />
       <div className="min-h-dvh bg-background pb-24">
         <ErrorBoundary FallbackComponent={Error}>
-          <Suspense fallback={<Skeleton className="m-4 h-12 w-12 rounded-full" />}>
+          <Suspense
+            fallback={<Skeleton className="m-4 h-12 w-12 rounded-full" />}
+          >
             {children}
           </Suspense>
         </ErrorBoundary>

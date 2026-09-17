@@ -143,7 +143,9 @@ export const CRM = ({
       },
       handleCallback: async (params: any) => {
         if (!authProvider.handleCallback) {
-          throw new Error("handleCallback is not implemented in the authProvider");
+          throw new Error(
+            "handleCallback is not implemented in the authProvider",
+          );
         }
         const result = await authProvider.handleCallback(params);
         try {
@@ -197,7 +199,10 @@ const DesktopAdmin = (
   >
     <CustomRoutes noLayout>
       <Route path={SignupPage.path} element={<SignupPage />} />
-      <Route path={ConfirmationRequired.path} element={<ConfirmationRequired />} />
+      <Route
+        path={ConfirmationRequired.path}
+        element={<ConfirmationRequired />}
+      />
       <Route path={SetPasswordPage.path} element={<SetPasswordPage />} />
       <Route path={ForgotPasswordPage.path} element={<ForgotPasswordPage />} />
       <Route path={OAuthConsentPage.path} element={<OAuthConsentPage />} />
@@ -264,13 +269,22 @@ const MobileAdmin = (
       >
         <CustomRoutes noLayout>
           <Route path={SignupPage.path} element={<SignupPage />} />
-          <Route path={ConfirmationRequired.path} element={<ConfirmationRequired />} />
+          <Route
+            path={ConfirmationRequired.path}
+            element={<ConfirmationRequired />}
+          />
           <Route path={SetPasswordPage.path} element={<SetPasswordPage />} />
-          <Route path={ForgotPasswordPage.path} element={<ForgotPasswordPage />} />
+          <Route
+            path={ForgotPasswordPage.path}
+            element={<ForgotPasswordPage />}
+          />
           <Route path={OAuthConsentPage.path} element={<OAuthConsentPage />} />
         </CustomRoutes>
         <CustomRoutes>
-          <Route path={SettingsPageMobile.path} element={<SettingsPageMobile />} />
+          <Route
+            path={SettingsPageMobile.path}
+            element={<SettingsPageMobile />}
+          />
           <Route path={ChangelogPage.path} element={<ChangelogPage />} />
         </CustomRoutes>
         <Resource name="deals" {...deals} />

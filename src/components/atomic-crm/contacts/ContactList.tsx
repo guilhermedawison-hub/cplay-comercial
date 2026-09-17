@@ -43,7 +43,8 @@ export const ContactList = () => {
       <div>
         <h2 className="text-xl font-semibold tracking-tight">Contatos</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Pessoas relacionadas à operação comercial, com ou sem empresa vinculada.
+          Pessoas relacionadas à operação comercial, com ou sem empresa
+          vinculada.
         </p>
       </div>
       <List

@@ -71,7 +71,11 @@ function EditHeader() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex min-w-0 items-center gap-3">
           {deal.company_id ? (
-            <ReferenceField source="company_id" reference="companies" link="show">
+            <ReferenceField
+              source="company_id"
+              reference="companies"
+              link="show"
+            >
               <CompanyAvatar />
             </ReferenceField>
           ) : null}
@@ -79,7 +83,9 @@ function EditHeader() {
             <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
               Editar oportunidade
             </p>
-            <h2 className="truncate text-xl font-semibold text-foreground">{defaultTitle}</h2>
+            <h2 className="truncate text-xl font-semibold text-foreground">
+              {defaultTitle}
+            </h2>
             {!deal.company_id && deal.primary_contact_id ? (
               <div className="mt-1 text-sm text-muted-foreground">
                 <ReferenceField

@@ -61,7 +61,11 @@ export const DealCardContent = ({
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold leading-tight text-foreground">
                 {deal.company_id ? (
-                  <ReferenceField source="company_id" reference="companies" link={false} />
+                  <ReferenceField
+                    source="company_id"
+                    reference="companies"
+                    link={false}
+                  />
                 ) : (
                   <ReferenceField
                     source="primary_contact_id"
@@ -74,7 +78,10 @@ export const DealCardContent = ({
               </p>
               {deal.company_id && deal.primary_contact_id ? (
                 <div className="mt-1 flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground">
-                  <UserRound className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  <UserRound
+                    className="h-3.5 w-3.5 shrink-0"
+                    aria-hidden="true"
+                  />
                   <span className="truncate">
                     <ReferenceField
                       source="primary_contact_id"
@@ -89,10 +96,17 @@ export const DealCardContent = ({
             </div>
 
             <div className="flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground">
-              <BriefcaseBusiness className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+              <BriefcaseBusiness
+                className="h-3.5 w-3.5 shrink-0"
+                aria-hidden="true"
+              />
               <span className="truncate">
                 {deal.product_id ? (
-                  <ReferenceField source="product_id" reference="products" link={false} />
+                  <ReferenceField
+                    source="product_id"
+                    reference="products"
+                    link={false}
+                  />
                 ) : (
                   "Produto não informado"
                 )}
@@ -111,7 +125,11 @@ export const DealCardContent = ({
                 />
               </span>
               <span className="max-w-[48%] truncate text-muted-foreground">
-                <ReferenceField source="sales_id" reference="sales" link={false}>
+                <ReferenceField
+                  source="sales_id"
+                  reference="sales"
+                  link={false}
+                >
                   <SaleName />
                 </ReferenceField>
               </span>

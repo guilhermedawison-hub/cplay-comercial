@@ -40,7 +40,8 @@ export const MobileNavigation = () => {
       className="fixed inset-x-0 bottom-0 z-50 border-t border-border/80 bg-background/95 shadow-[0_-8px_24px_rgba(15,23,42,0.06)] backdrop-blur supports-[backdrop-filter]:bg-background/90"
       style={{
         paddingBottom: isPwa && isWebiOS ? 15 : undefined,
-        height: "calc(var(--spacing) * 16)" + (isPwa && isWebiOS ? " + 15px" : ""),
+        height:
+          "calc(var(--spacing) * 16)" + (isPwa && isWebiOS ? " + 15px" : ""),
       }}
     >
       <div className="mx-auto flex h-full max-w-md items-center justify-around px-2">
@@ -85,12 +86,15 @@ const NavigationButton = ({
     variant="ghost"
     className={cn(
       "h-12 min-w-14 flex-col gap-1 rounded-lg px-1 py-1.5 text-muted-foreground",
-      isActive && "bg-[var(--cplay-primary-subtle)] text-primary hover:bg-[var(--cplay-primary-subtle)] hover:text-primary",
+      isActive &&
+        "bg-[var(--cplay-primary-subtle)] text-primary hover:bg-[var(--cplay-primary-subtle)] hover:text-primary",
     )}
   >
     <Link to={href}>
       <Icon className="size-5" aria-hidden="true" />
-      <span className="max-w-[68px] truncate text-[0.62rem] font-semibold">{label}</span>
+      <span className="max-w-[68px] truncate text-[0.62rem] font-semibold">
+        {label}
+      </span>
     </Link>
   </Button>
 );

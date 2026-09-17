@@ -10,9 +10,7 @@ describe("getFollowUpVisualState", () => {
   });
 
   it("distinguishes overdue, due-soon and scheduled follow-ups", () => {
-    expect(getFollowUpVisualState("2026-09-17T10:00:00Z", now)).toBe(
-      "overdue",
-    );
+    expect(getFollowUpVisualState("2026-09-17T10:00:00Z", now)).toBe("overdue");
     expect(getFollowUpVisualState("2026-09-17T18:00:00Z", now)).toBe(
       "due-soon",
     );

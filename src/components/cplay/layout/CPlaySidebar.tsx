@@ -26,12 +26,17 @@ export const CPlaySidebar = () => (
         C
       </div>
       <div className="min-w-0">
-        <p className="truncate text-sm font-semibold text-sidebar-foreground">CPlay Comercial</p>
+        <p className="truncate text-sm font-semibold text-sidebar-foreground">
+          CPlay Comercial
+        </p>
         <p className="text-xs text-muted-foreground">Central comercial</p>
       </div>
     </div>
 
-    <nav className="flex-1 space-y-1 px-3 py-4" aria-label="Navegação principal">
+    <nav
+      className="flex-1 space-y-1 px-3 py-4"
+      aria-label="Navegação principal"
+    >
       {cplayNavigationItems.map(({ label, to, icon: Icon }) => (
         <NavLink
           key={to}

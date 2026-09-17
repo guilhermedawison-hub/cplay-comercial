@@ -182,8 +182,8 @@ const updateDealStage = async (
     return;
   }
 
-  const [{ data: sourceDeals }, { data: destinationDeals }] =
-    await Promise.all([
+  const [{ data: sourceDeals }, { data: destinationDeals }] = await Promise.all(
+    [
       dataProvider.getList("deals", {
         sort: { field: "index", order: "ASC" },
         pagination: { page: 1, perPage: 100 },
@@ -194,7 +194,8 @@ const updateDealStage = async (
         pagination: { page: 1, perPage: 100 },
         filter: { stage: destination.stage },
       }),
-    ]);
+    ],
+  );
   const destinationIndex = destination.index ?? destinationDeals.length + 1;
 
   await Promise.all([

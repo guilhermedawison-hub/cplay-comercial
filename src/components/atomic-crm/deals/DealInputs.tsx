@@ -13,7 +13,12 @@ import { NumberInput } from "@/components/admin/number-input";
 import { DateInput } from "@/components/admin/date-input";
 import { DateTimeInput } from "@/components/admin/date-time-input";
 import { SelectInput } from "@/components/admin/select-input";
-import { BadgeDollarSign, CalendarClock, UserRound, UsersRound } from "lucide-react";
+import {
+  BadgeDollarSign,
+  CalendarClock,
+  UserRound,
+  UsersRound,
+} from "lucide-react";
 
 import type { CPlayProduct } from "@/cplay/types";
 import { contactOptionText } from "../misc/ContactOption";
@@ -210,7 +215,9 @@ const FormSection = ({
       </div>
       <div>
         <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-        <p className="mt-0.5 text-xs leading-5 text-muted-foreground">{description}</p>
+        <p className="mt-0.5 text-xs leading-5 text-muted-foreground">
+          {description}
+        </p>
       </div>
     </div>
     {children}
@@ -221,7 +228,9 @@ const ProductPriceSync = () => {
   const productId = useWatch({ name: "product_id" }) as Identifier | undefined;
   const record = useRecordContext<Deal>();
   const { setValue } = useFormContext();
-  const appliedProductId = useRef<Identifier | undefined>(record?.product_id ?? undefined);
+  const appliedProductId = useRef<Identifier | undefined>(
+    record?.product_id ?? undefined,
+  );
   const { data: product } = useGetOne<CPlayProduct>(
     "products",
     { id: productId as Identifier },

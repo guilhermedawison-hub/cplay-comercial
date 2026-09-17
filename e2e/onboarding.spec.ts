@@ -87,6 +87,10 @@ test("user onboarding", async ({ page, isMobile, menu, dismissToast }) => {
   await page.waitForLoadState("networkidle");
 
   await expect(page.getByText("Atividade recente")).toBeVisible();
-  await expect(page.getByText("Smith Corp", { exact: false }).first()).toBeVisible();
-  await expect(page.getByText("Jane Smith", { exact: false }).first()).toBeVisible();
+  await expect(
+    page.getByText("Smith Corp", { exact: false }).first(),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Jane Smith", { exact: false }).first(),
+  ).toBeVisible();
 });

@@ -9,13 +9,18 @@ export const getOpenDeals = (deals: Deal[]) =>
   );
 
 export const getPotentialAmount = (deals: Deal[]) =>
-  getOpenDeals(deals).reduce((total, deal) => total + Number(deal.amount || 0), 0);
+  getOpenDeals(deals).reduce(
+    (total, deal) => total + Number(deal.amount || 0),
+    0,
+  );
 
 export const getPendingFollowUps = (deals: Deal[], now = new Date()) =>
   getOpenDeals(deals).filter((deal) => {
     if (!deal.next_follow_up_at) return false;
     const followUp = new Date(deal.next_follow_up_at);
-    return !Number.isNaN(followUp.getTime()) && followUp.getTime() <= now.getTime();
+    return (
+      !Number.isNaN(followUp.getTime()) && followUp.getTime() <= now.getTime()
+    );
   }).length;
 
 export const getClosedThisMonth = (deals: Deal[], now = new Date()) => {

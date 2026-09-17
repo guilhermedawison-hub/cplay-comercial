@@ -61,7 +61,11 @@ export const CPlayHeader = () => {
           <RefreshButton />
           <UserMenu>
             <UserMenuLink to="/profile" label="Perfil" icon={User} />
-            <UserMenuLink to="/settings" label="Configurações" icon={Settings} />
+            <UserMenuLink
+              to="/settings"
+              label="Configurações"
+              icon={Settings}
+            />
           </UserMenu>
         </div>
       </div>

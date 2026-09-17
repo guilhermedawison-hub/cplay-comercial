@@ -65,7 +65,11 @@ const DealShowContent = () => {
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex min-w-0 items-center gap-4">
             {record.company_id ? (
-              <ReferenceField source="company_id" reference="companies" link="show">
+              <ReferenceField
+                source="company_id"
+                reference="companies"
+                link="show"
+              >
                 <CompanyAvatar />
               </ReferenceField>
             ) : null}
@@ -78,7 +82,11 @@ const DealShowContent = () => {
               </h2>
               <div className="mt-1 truncate text-sm text-muted-foreground">
                 {record.company_id ? (
-                  <ReferenceField source="company_id" reference="companies" link="show" />
+                  <ReferenceField
+                    source="company_id"
+                    reference="companies"
+                    link="show"
+                  />
                 ) : record.primary_contact_id ? (
                   <ReferenceField
                     source="primary_contact_id"
@@ -112,11 +120,21 @@ const DealShowContent = () => {
         <section className="rounded-xl border border-border/80 bg-card p-4 sm:p-5">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-semibold text-foreground">Resumo comercial</p>
-              <p className="text-xs text-muted-foreground">Dados principais da oportunidade</p>
+              <p className="text-sm font-semibold text-foreground">
+                Resumo comercial
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Dados principais da oportunidade
+              </p>
             </div>
             <StatusBadge
-              tone={record.stage === "fechado" ? "success" : record.stage === "perdido" ? "danger" : "neutral"}
+              tone={
+                record.stage === "fechado"
+                  ? "success"
+                  : record.stage === "perdido"
+                    ? "danger"
+                    : "neutral"
+              }
               label={findDealLabel(dealStages, record.stage)}
             />
           </div>
@@ -131,7 +149,11 @@ const DealShowContent = () => {
 
             <Detail label="Produto/Serviço">
               {record.product_id ? (
-                <ReferenceField source="product_id" reference="products" link={false} />
+                <ReferenceField
+                  source="product_id"
+                  reference="products"
+                  link={false}
+                />
               ) : (
                 "Não informado"
               )}
@@ -145,14 +167,19 @@ const DealShowContent = () => {
 
             <Detail label="Origem do lead">
               {record.lead_source_id ? (
-                <ReferenceField source="lead_source_id" reference="lead_sources" link={false} />
+                <ReferenceField
+                  source="lead_source_id"
+                  reference="lead_sources"
+                  link={false}
+                />
               ) : (
                 "Não informada"
               )}
             </Detail>
 
             <Detail label="Previsão de fechamento">
-              {record.expected_closing_date && isValid(new Date(record.expected_closing_date))
+              {record.expected_closing_date &&
+              isValid(new Date(record.expected_closing_date))
                 ? formatISODateString(record.expected_closing_date)
                 : "Não informada"}
             </Detail>
@@ -165,10 +192,17 @@ const DealShowContent = () => {
 
         <section className="rounded-xl border border-border/80 bg-card p-4 sm:p-5">
           <div className="mb-4 flex items-center gap-2">
-            <CalendarClock className="h-4 w-4 text-primary" aria-hidden="true" />
+            <CalendarClock
+              className="h-4 w-4 text-primary"
+              aria-hidden="true"
+            />
             <div>
-              <p className="text-sm font-semibold text-foreground">Próximo follow-up</p>
-              <p className="text-xs text-muted-foreground">Próxima ação comercial planejada</p>
+              <p className="text-sm font-semibold text-foreground">
+                Próximo follow-up
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Próxima ação comercial planejada
+              </p>
             </div>
           </div>
 
@@ -178,12 +212,16 @@ const DealShowContent = () => {
           />
 
           <p className="mt-4 text-lg font-semibold text-foreground">
-            {record.next_follow_up_at ? formatFollowUp(record.next_follow_up_at) : "Não agendado"}
+            {record.next_follow_up_at
+              ? formatFollowUp(record.next_follow_up_at)
+              : "Não agendado"}
           </p>
 
           {record.next_follow_up_note ? (
             <div className="mt-4 rounded-lg bg-muted/45 p-3">
-              <p className="text-xs font-medium text-muted-foreground">Observação</p>
+              <p className="text-xs font-medium text-muted-foreground">
+                Observação
+              </p>
               <p className="mt-1 whitespace-pre-line text-sm leading-6 text-foreground">
                 {record.next_follow_up_note}
               </p>
@@ -198,7 +236,10 @@ const DealShowContent = () => {
             <p className="mb-3 text-sm font-semibold text-foreground">
               {translate("resources.deals.fields.contact_ids")}
             </p>
-            <ReferenceArrayField source="contact_ids" reference="contacts_summary">
+            <ReferenceArrayField
+              source="contact_ids"
+              reference="contacts_summary"
+            >
               <ContactList />
             </ReferenceArrayField>
           </div>
@@ -221,8 +262,12 @@ const DealShowContent = () => {
       <section className="px-5 pb-6 sm:px-6">
         <div className="rounded-xl border border-border/80 bg-card p-4 sm:p-5">
           <div className="mb-4">
-            <p className="text-sm font-semibold text-foreground">Histórico e observações</p>
-            <p className="text-xs text-muted-foreground">Timeline comercial da oportunidade</p>
+            <p className="text-sm font-semibold text-foreground">
+              Histórico e observações
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Timeline comercial da oportunidade
+            </p>
           </div>
           <Separator className="mb-4" />
           <InfiniteListBase
@@ -253,7 +298,13 @@ const Detail = ({
 }) => (
   <div className="min-w-0">
     <span className="text-xs font-medium text-muted-foreground">{label}</span>
-    <div className={strong ? "mt-1 text-lg font-semibold text-foreground" : "mt-1 text-sm text-foreground"}>
+    <div
+      className={
+        strong
+          ? "mt-1 text-lg font-semibold text-foreground"
+          : "mt-1 text-sm text-foreground"
+      }
+    >
       {children}
     </div>
   </div>
@@ -280,7 +331,7 @@ const followUpTypeLabel = (type?: string | null) => {
     visita: "Visita",
     outro: "Outro",
   };
-  return type ? labels[type] ?? type : "Não informado";
+  return type ? (labels[type] ?? type) : "Não informado";
 };
 
 const getFollowUpTone = (state: ReturnType<typeof getFollowUpVisualState>) => {
@@ -347,7 +398,12 @@ const ArchiveButton = ({ record }: { record: Deal }) => {
   };
 
   return (
-    <Button onClick={handleClick} size="sm" variant="outline" className="h-9 gap-2">
+    <Button
+      onClick={handleClick}
+      size="sm"
+      variant="outline"
+      className="h-9 gap-2"
+    >
       <Archive className="h-4 w-4" />
       {translate("resources.deals.archived.action")}
     </Button>
@@ -377,7 +433,12 @@ const UnarchiveButton = ({ record }: { record: Deal }) => {
   });
 
   return (
-    <Button onClick={() => mutate()} size="sm" variant="outline" className="h-9 gap-2">
+    <Button
+      onClick={() => mutate()}
+      size="sm"
+      variant="outline"
+      className="h-9 gap-2"
+    >
       <ArchiveRestore className="h-4 w-4" />
       {translate("resources.deals.unarchived.action")}
     </Button>

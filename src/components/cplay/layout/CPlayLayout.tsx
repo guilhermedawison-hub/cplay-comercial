@@ -28,7 +28,9 @@ export const CPlayLayout = ({ children }: { children: ReactNode }) => {
           id="main-content"
         >
           <ErrorBoundary FallbackComponent={Error}>
-            <Suspense fallback={<Skeleton className="h-12 w-12 rounded-full" />}>
+            <Suspense
+              fallback={<Skeleton className="h-12 w-12 rounded-full" />}
+            >
               {children}
             </Suspense>
           </ErrorBoundary>
