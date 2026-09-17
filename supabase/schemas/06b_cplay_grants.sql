@@ -6,6 +6,10 @@ grant all on function public.set_updated_at() to anon;
 grant all on function public.set_updated_at() to authenticated;
 grant all on function public.set_updated_at() to service_role;
 
+grant all on function public.log_cplay_deal_changes() to anon;
+grant all on function public.log_cplay_deal_changes() to authenticated;
+grant all on function public.log_cplay_deal_changes() to service_role;
+
 grant all on table public.products to anon;
 grant all on table public.products to authenticated;
 grant all on table public.products to service_role;
