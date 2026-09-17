@@ -1,6 +1,11 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { BriefcaseBusiness, CalendarClock, UserRound } from "lucide-react";
-import {\n  useGetOne,\n  useRedirect,\n  RecordContextProvider,\n  useRecordContext,\n} from "ra-core";
+import {
+  RecordContextProvider,
+  useGetOne,
+  useRecordContext,
+  useRedirect,
+} from "ra-core";
 import { ReferenceField } from "@/components/admin/reference-field";
 import { NumberField } from "@/components/admin/number-field";
 import { Card, CardContent } from "@/components/ui/card";
@@ -34,9 +39,18 @@ export const DealCardContent = ({
   const { currency } = useConfigurationContext();
   const redirect = useRedirect();
   const followUpState = getFollowUpVisualState(deal.next_follow_up_at);
+  const { data: primaryContact } = useGetOne<Contact>(
+    "contacts",
+    { id: deal.primary_contact_id as NonNullable<Deal["primary_contact_id"]> },
+    { enabled: deal.primary_contact_id != null },
+  );
+
+  const primaryContactName = primaryContact
+    ? \`\${primaryContact.first_name ?? ""} \${primaryContact.last_name ?? ""}\`.trim()
+    : "Contato";
 
   const handleClick = () => {
-    redirect(`/deals/${deal.id}/show`, undefined, undefined, undefined, {
+    redirect(\`/deals/\${deal.id}/show\`, undefined, undefined, undefined, {
       _scrollToTop: false,
     });
   };
@@ -51,11 +65,11 @@ export const DealCardContent = ({
     >
       <RecordContextProvider value={deal}>
         <Card
-          className={`gap-0 rounded-xl border-border/80 py-0 transition-all duration-200 ${
+          className={\`gap-0 rounded-xl border-border/80 py-0 transition-all duration-200 \${
             snapshot?.isDragging
               ? "rotate-1 border-primary/40 opacity-95 shadow-lg"
               : "shadow-none hover:border-primary/25 hover:shadow-sm"
-          }`}
+          }\`}
         >
           <CardContent className="flex flex-col gap-3 px-3.5 py-3.5">
             <div className="min-w-0">
@@ -67,30 +81,17 @@ export const DealCardContent = ({
                     link={false}
                   />
                 ) : (
-                  <ReferenceField
-                    source="primary_contact_id"
-                    reference="contacts"
-                    link={false}
-                  >
-                    <ContactName />
-                  </ReferenceField>
+                  primaryContactName
                 )}
               </p>
+
               {deal.company_id && deal.primary_contact_id ? (
                 <div className="mt-1 flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground">
                   <UserRound
                     className="h-3.5 w-3.5 shrink-0"
                     aria-hidden="true"
                   />
-                  <span className="truncate">
-                    <ReferenceField
-                      source="primary_contact_id"
-                      reference="contacts"
-                      link={false}
-                    >
-                      <ContactName />
-                    </ReferenceField>
-                  </span>
+                  <span className="truncate">{primaryContactName}</span>
                 </div>
               ) : null}
             </div>
@@ -124,6 +125,7 @@ export const DealCardContent = ({
                   }}
                 />
               </span>
+
               <span className="max-w-[48%] truncate text-muted-foreground">
                 <ReferenceField
                   source="sales_id"
@@ -141,6 +143,7 @@ export const DealCardContent = ({
                 label={getFollowUpLabel(followUpState)}
                 className="max-w-full"
               />
+
               {deal.next_follow_up_at ? (
                 <span className="flex shrink-0 items-center gap-1 text-[11px] text-muted-foreground">
                   <CalendarClock className="h-3.5 w-3.5" aria-hidden="true" />
@@ -155,16 +158,10 @@ export const DealCardContent = ({
   );
 };
 
-const ContactName = () => {
-  const contact = useRecordContext<Contact>();
-  if (!contact) return null;
-  return <>{`${contact.first_name ?? ""} ${contact.last_name ?? ""}`.trim()}</>;
-};
-
 const SaleName = () => {
   const sale = useRecordContext<Sale>();
   if (!sale) return null;
-  return <>{`${sale.first_name} ${sale.last_name}`.trim()}</>;
+  return <>{\`\${sale.first_name} \${sale.last_name}\`.trim()}</>;
 };
 
 const getFollowUpTone = (state: ReturnType<typeof getFollowUpVisualState>) => {
@@ -183,6 +180,7 @@ const getFollowUpLabel = (state: ReturnType<typeof getFollowUpVisualState>) => {
 const formatFollowUp = (value: string) => {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
+
   return new Intl.DateTimeFormat("pt-BR", {
     day: "2-digit",
     month: "2-digit",
