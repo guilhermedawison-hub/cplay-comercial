@@ -34,7 +34,7 @@ test("CPlay commercial opportunity flow", async ({
   await menu.goToDeals();
 
   const createOpportunity = page.getByRole("link", {
-    name: /Criar oportunidade|Nova oportunidade/,
+    name: "Criar oportunidade",
   });
   await expect(createOpportunity).toBeVisible();
   await createOpportunity.click();
