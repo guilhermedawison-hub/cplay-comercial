@@ -48,9 +48,9 @@ test("user onboarding", async ({ page, isMobile, menu, dismissToast }) => {
 
   await page.getByLabel(/Has newsletter|Recebe newsletter/).check();
 
-  await expect(page.getByLabel(/Account manager \*|Responsável \*/)).toHaveText(
-    "John Doe",
-  );
+  await expect(
+    page.getByRole("combobox", { name: /Responsável|Account manager/ }),
+  ).toContainText("John Doe");
 
   await page.getByRole("button", { name: "Save" }).click();
   await dismissToast("Element created");
