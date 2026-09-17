@@ -44,8 +44,19 @@ export const DealInputs = () => {
 
 const DealInfoInputs = () => (
   <div className="flex flex-col gap-4 flex-1">
-    <TextInput source="name" label="Negócio/Oportunidade" validate={required()} helperText={false} />
-    <TextInput source="description" label="Observações" multiline rows={3} helperText={false} />
+    <TextInput
+      source="name"
+      label="Negócio/Oportunidade"
+      validate={required()}
+      helperText={false}
+    />
+    <TextInput
+      source="description"
+      label="Observações"
+      multiline
+      rows={3}
+      helperText={false}
+    />
   </div>
 );
 
@@ -53,7 +64,11 @@ const DealLinkedToInputs = () => (
   <div className="flex flex-col gap-4 flex-1">
     <h3 className="text-base font-medium">Cliente</h3>
 
-    <ReferenceInput source="primary_contact_id" reference="contacts_summary" perPage={20}>
+    <ReferenceInput
+      source="primary_contact_id"
+      reference="contacts_summary"
+      perPage={20}
+    >
       <AutocompleteInput
         label="Contato principal"
         optionText={contactOptionText}
@@ -63,10 +78,7 @@ const DealLinkedToInputs = () => (
     </ReferenceInput>
 
     <ReferenceInput source="company_id" reference="companies" perPage={20}>
-      <AutocompleteCompanyInput
-        label="Empresa (opcional)"
-        modal
-      />
+      <AutocompleteCompanyInput label="Empresa (opcional)" modal />
     </ReferenceInput>
   </div>
 );
@@ -94,7 +106,11 @@ const DealCommercialInputs = () => {
         validate={required()}
       />
 
-      <ReferenceInput source="lead_source_id" reference="lead_sources" perPage={50}>
+      <ReferenceInput
+        source="lead_source_id"
+        reference="lead_sources"
+        perPage={50}
+      >
         <AutocompleteInput
           label="Origem do lead"
           optionText="name"
@@ -174,8 +190,7 @@ const ProductPriceSync = () => {
   const productId = useWatch({ name: "product_id" }) as Identifier | undefined;
   const record = useRecordContext<Deal>();
   const { setValue } = useFormContext();
-  const initialized = useRef(false);
-  const previousProductId = useRef<Identifier | undefined>(record?.product_id);
+  const appliedProductId = useRef<Identifier | undefined>(record?.product_id ?? undefined);
   const { data: product } = useGetOne<CPlayProduct>(
     "products",
     { id: productId as Identifier },
@@ -183,19 +198,19 @@ const ProductPriceSync = () => {
   );
 
   useEffect(() => {
-    if (!initialized.current) {
-      previousProductId.current = record?.product_id ?? productId;
-      initialized.current = true;
+    if (productId == null) {
+      appliedProductId.current = undefined;
       return;
     }
 
-    if (productId === previousProductId.current) return;
-    previousProductId.current = productId;
+    if (!product || product.id !== productId) return;
+    if (appliedProductId.current === productId) return;
 
-    if (product?.base_price != null) {
+    appliedProductId.current = productId;
+    if (product.base_price != null) {
       setValue("amount", product.base_price, { shouldDirty: true });
     }
-  }, [productId, product?.base_price, record?.product_id, setValue]);
+  }, [product, productId, setValue]);
 
   return null;
 };
