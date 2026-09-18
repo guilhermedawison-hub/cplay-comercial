@@ -385,7 +385,7 @@ export const frenchCrmMessages = {
         creating: "Création...",
         initial_user_created: "Utilisateur initial créé avec succès",
       },
-      welcome_title: "Bienvenue sur Atomic CRM",
+      welcome_title: "Bienvenue sur CPlay Comercial",
     },
     common: {
       account_manager: "Responsable de compte",
