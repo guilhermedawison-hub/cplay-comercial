@@ -42,6 +42,24 @@ describe("i18nProvider", () => {
     );
   });
 
+  it("translates the CPlay authentication flow in pt-BR", async () => {
+    await i18nProvider.changeLocale("pt-BR");
+
+    expect(i18nProvider.translate("crm.auth.welcome_title")).toBe(
+      "Bem-vindo ao CPlay Comercial",
+    );
+    expect(i18nProvider.translate("crm.auth.signup.create_first_user")).toBe(
+      "Crie a primeira conta de usuário para concluir a configuração.",
+    );
+    expect(i18nProvider.translate("crm.auth.first_name")).toBe("Nome");
+    expect(i18nProvider.translate("crm.auth.last_name")).toBe("Sobrenome");
+    expect(i18nProvider.translate("ra.auth.email")).toBe("E-mail");
+    expect(i18nProvider.translate("ra.auth.password")).toBe("Senha");
+    expect(i18nProvider.translate("crm.auth.signup.create_account")).toBe(
+      "Criar conta",
+    );
+  });
+
   it("uses pt-BR as the CPlay initial locale", () => {
     expect(getInitialLocale()).toBe("pt-BR");
   });
