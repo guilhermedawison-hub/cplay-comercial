@@ -71,9 +71,15 @@ export const DealCreate = ({ open }: { open: boolean }) => {
       (res) => {
         if (!res) return res;
 
+        const updatedDeals = res.data.map(
+          (d: Deal) => dealsById[d.id] || d,
+        );
+        const hasCreatedDeal = updatedDeals.some((d: Deal) => d.id === deal.id);
+
         return {
           ...res,
-          data: res.data.map((d: Deal) => dealsById[d.id] || d),
+          data: hasCreatedDeal ? updatedDeals : [deal, ...updatedDeals],
+          total: hasCreatedDeal ? res.total : (res.total ?? updatedDeals.length) + 1,
         };
       },
       { updatedAt: now },
