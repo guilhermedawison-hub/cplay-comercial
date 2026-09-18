@@ -1,4 +1,43 @@
 export const ptBrCrmMessages = {
+  ra: {
+    auth: {
+      sign_in: "Entrar",
+      sign_in_error: "Falha na autenticação. Verifique seu e-mail e senha.",
+      email: "E-mail",
+      password: "Senha",
+      username: "Usuário",
+      auth_check_error: "Sua sessão expirou. Entre novamente.",
+    },
+  },
+  "ra-supabase": {
+    auth: {
+      forgot_password: "Esqueceu sua senha?",
+      password_reset:
+        "Verifique seu e-mail para continuar a redefinição de senha.",
+    },
+  },
+  crm: {
+    language: "Idioma",
+    auth: {
+      first_name: "Nome",
+      last_name: "Sobrenome",
+      confirm_password: "Confirmar senha",
+      confirmation_required:
+        "Acesse o link que acabamos de enviar por e-mail para confirmar sua conta.",
+      recovery_email_sent:
+        "Se o e-mail estiver cadastrado, você receberá as instruções de recuperação em instantes.",
+      sign_in_failed: "Não foi possível entrar.",
+      sign_in_google_workspace: "Entrar com Google Workspace",
+      signup: {
+        create_account: "Criar conta",
+        create_first_user:
+          "Crie a primeira conta de usuário para concluir a configuração.",
+        creating: "Criando...",
+        initial_user_created: "Usuário inicial criado com sucesso",
+      },
+      welcome_title: "Bem-vindo ao CPlay Comercial",
+    },
+  },
   resources: {
     companies: {
       name: "Empresa |||| Empresas",
