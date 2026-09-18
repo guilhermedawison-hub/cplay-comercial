@@ -60,6 +60,23 @@ describe("i18nProvider", () => {
     );
   });
 
+  it("uses CPlay branding in every authentication locale", async () => {
+    await i18nProvider.changeLocale("pt-BR");
+    expect(i18nProvider.translate("crm.auth.welcome_title")).toBe(
+      "Bem-vindo ao CPlay Comercial",
+    );
+
+    await i18nProvider.changeLocale("en");
+    expect(i18nProvider.translate("crm.auth.welcome_title")).toBe(
+      "Welcome to CPlay Comercial",
+    );
+
+    await i18nProvider.changeLocale("fr");
+    expect(i18nProvider.translate("crm.auth.welcome_title")).toBe(
+      "Bienvenue sur CPlay Comercial",
+    );
+  });
+
   it("uses pt-BR as the CPlay initial locale", () => {
     expect(getInitialLocale()).toBe("pt-BR");
   });
