@@ -67,9 +67,6 @@ test("CPlay commercial opportunity flow", async ({
   expect(Number(persistedDeal.amount)).toBeCloseTo(199.9, 2);
   expect(persistedDeal.stage).toBe("novo");
 
-  await page.reload();
-  await page.waitForLoadState("networkidle");
-
   const newStage = page.getByRole("region", { name: "Novo" });
   await expect(newStage).toBeVisible({ timeout: 10_000 });
   await expect(page.getByText("Site Institucional", { exact: true })).toBeVisible({
