@@ -8,13 +8,6 @@ test("CPlay commercial opportunity flow", async ({
   getDealByName,
   menu,
 }) => {
-  page.on("console", (message) => {
-    const text = message.text();
-    if (text.includes("CPLAY_DEALS_QUERY_")) {
-      console.log(text);
-    }
-  });
-
   const sales = await createSales({
     first_name: "Luiz",
     last_name: "Comercial",
@@ -73,9 +66,6 @@ test("CPlay commercial opportunity flow", async ({
   expect(Number(persistedDeal.product_id)).toBe(Number(product.id));
   expect(Number(persistedDeal.amount)).toBeCloseTo(199.9, 2);
   expect(persistedDeal.stage).toBe("novo");
-
-  await menu.goToContacts();
-  await menu.goToDeals();
 
   const newStage = page.getByRole("region", { name: "Novo" });
   await expect(newStage).toBeVisible({ timeout: 10_000 });
