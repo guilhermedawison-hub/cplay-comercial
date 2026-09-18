@@ -11,6 +11,7 @@ import {
   disableEmailPasswordAuthentication,
   googleWorkplaceDomain,
 } from "./authConfig";
+import { AuthLanguageSelector } from "./AuthLanguageSelector";
 
 /**
  * Login page displayed when authentication is enabled and the user is not authenticated.
@@ -89,7 +90,10 @@ export const LoginPage = (props: { redirectTo?: string }) => {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="relative min-h-screen flex">
+      <div className="absolute right-4 top-4 z-30 sm:right-8 sm:top-8">
+        <AuthLanguageSelector />
+      </div>
       <div className="relative grid w-full lg:grid-cols-2">
         <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
           <div className="absolute inset-0 bg-zinc-900" />

@@ -15,8 +15,9 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 import { FormToolbar } from "../layout/FormToolbar";
 import { CompanyAvatar } from "../companies/CompanyAvatar";
-import type { Deal } from "../types";
+import type { Contact, Deal } from "../types";
 import { DealInputs } from "./DealInputs";
+import { normalizeDealFormData } from "./normalizeDealFormData";
 
 export const DealEdit = ({ open, id }: { open: boolean; id?: string }) => {
   const redirect = useRedirect();
@@ -29,11 +30,12 @@ export const DealEdit = ({ open, id }: { open: boolean; id?: string }) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={() => handleClose()}>
-      <DialogContent className="lg:max-w-4xl p-4 overflow-y-auto max-h-9/10 top-1/20 translate-y-0">
+    <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && handleClose()}>
+      <DialogContent className="max-h-[92vh] overflow-y-auto p-0 sm:max-w-3xl lg:max-w-4xl">
         {id ? (
           <EditBase
             id={id}
+            transform={normalizeDealFormData}
             mutationMode="pessimistic"
             mutationOptions={{
               onSuccess: () => {
@@ -44,11 +46,15 @@ export const DealEdit = ({ open, id }: { open: boolean; id?: string }) => {
               },
             }}
           >
-            <EditHeader />
-            <Form>
-              <DealInputs />
-              <FormToolbar />
-            </Form>
+            <div className="sticky top-0 z-10 border-b bg-background/95 px-5 py-4 backdrop-blur sm:px-6">
+              <EditHeader />
+            </div>
+            <div className="px-5 pb-6 pt-5 sm:px-6">
+              <Form>
+                <DealInputs />
+                <FormToolbar className="mt-5 border-t border-border/70 pt-4" />
+              </Form>
+            </div>
           </EditBase>
         ) : null}
       </DialogContent>
@@ -60,20 +66,43 @@ function EditHeader() {
   const translate = useTranslate();
   const { defaultTitle } = useEditContext<Deal>();
   const deal = useRecordContext<Deal>();
-  if (!deal) {
-    return null;
-  }
+  if (!deal) return null;
 
   return (
-    <DialogTitle className="pb-0">
-      <div className="flex justify-between items-start mb-8">
-        <div className="flex items-center gap-4">
-          <ReferenceField source="company_id" reference="companies" link="show">
-            <CompanyAvatar />
-          </ReferenceField>
-          <h2 className="text-2xl font-semibold">{defaultTitle}</h2>
+    <DialogTitle asChild>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex min-w-0 items-center gap-3">
+          {deal.company_id ? (
+            <ReferenceField
+              source="company_id"
+              reference="companies"
+              link="show"
+            >
+              <CompanyAvatar />
+            </ReferenceField>
+          ) : null}
+          <div className="min-w-0">
+            <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+              Editar oportunidade
+            </p>
+            <h2 className="truncate text-xl font-semibold text-foreground">
+              {defaultTitle}
+            </h2>
+            {!deal.company_id && deal.primary_contact_id ? (
+              <div className="mt-1 text-sm text-muted-foreground">
+                <ReferenceField
+                  source="primary_contact_id"
+                  reference="contacts_summary"
+                  link="show"
+                >
+                  <ContactName />
+                </ReferenceField>
+              </div>
+            ) : null}
+          </div>
         </div>
-        <div className="flex gap-2 pr-12">
+
+        <div className="flex shrink-0 items-center gap-2 pr-8 sm:pr-10">
           <DeleteButton />
           <Button asChild variant="outline" className="h-9">
             <Link to={`/deals/${deal.id}/show`}>
@@ -85,3 +114,9 @@ function EditHeader() {
     </DialogTitle>
   );
 }
+
+const ContactName = () => {
+  const contact = useRecordContext<Contact>();
+  if (!contact) return null;
+  return <>{`${contact.first_name ?? ""} ${contact.last_name ?? ""}`.trim()}</>;
+};

@@ -4,6 +4,7 @@ import { ExportButton } from "@/components/admin/export-button";
 import { List } from "@/components/admin/list";
 import { ListPagination } from "@/components/admin/list-pagination";
 import { SortButton } from "@/components/admin/sort-button";
+import { WorkspaceCard } from "@/components/cplay/ui/WorkspaceCard";
 
 import { DataImportButton } from "../dataImport/DataImportButton";
 import { TopToolbar } from "../layout/TopToolbar";
@@ -15,15 +16,24 @@ export const CompanyList = () => {
   const { identity } = useGetIdentity();
   if (!identity) return null;
   return (
-    <List
-      title={false}
-      perPage={25}
-      sort={{ field: "name", order: "ASC" }}
-      actions={<CompanyListActions />}
-      pagination={<ListPagination rowsPerPageOptions={[10, 25, 50, 100]} />}
-    >
-      <CompanyListLayout />
-    </List>
+    <div className="space-y-4">
+      <div>
+        <h2 className="text-xl font-semibold tracking-tight">Empresas</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Organizações vinculadas a contatos, oportunidades e histórico
+          comercial.
+        </p>
+      </div>
+      <List
+        title={false}
+        perPage={25}
+        sort={{ field: "name", order: "ASC" }}
+        actions={<CompanyListActions />}
+        pagination={<ListPagination rowsPerPageOptions={[10, 25, 50, 100]} />}
+      >
+        <CompanyListLayout />
+      </List>
+    </div>
   );
 };
 
@@ -35,11 +45,11 @@ const CompanyListLayout = () => {
   if (!data?.length && !hasFilters) return <CompanyEmpty />;
 
   return (
-    <div className="w-full flex flex-row gap-8">
+    <div className="flex w-full flex-row gap-6">
       <CompanyListFilter />
-      <div className="flex flex-col flex-1 gap-4">
+      <WorkspaceCard className="flex flex-1 flex-col gap-4 p-3 sm:p-4">
         <ImageList />
-      </div>
+      </WorkspaceCard>
     </div>
   );
 };
@@ -53,7 +63,7 @@ const CompanyListActions = () => {
       <ExportButton />
       <CreateButton
         label={translate("resources.companies.action.new", {
-          _: "New Company",
+          _: "Nova empresa",
         })}
       />
     </TopToolbar>

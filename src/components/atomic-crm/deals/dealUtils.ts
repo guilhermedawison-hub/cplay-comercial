@@ -4,7 +4,7 @@ import type { DealStage } from "../types";
 
 export const findDealLabel = (dealStages: DealStage[], dealValue: string) => {
   const dealStage = dealStages.find((stage) => stage.value === dealValue);
-  return dealStage?.label;
+  return dealStage?.label ?? dealValue;
 };
 
 export function getRelativeTimeString(

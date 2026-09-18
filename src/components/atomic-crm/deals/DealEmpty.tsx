@@ -1,21 +1,16 @@
 import { useGetList, useTranslate } from "ra-core";
-import { matchPath, useLocation, Link } from "react-router";
-import type { ReactNode } from "react";
+import { Link } from "react-router";
 import { CreateButton } from "@/components/admin/create-button";
 import { Progress } from "@/components/ui/progress";
 
 import { DataImportButton } from "../dataImport/DataImportButton";
 import useAppBarHeight from "../misc/useAppBarHeight";
 import type { Contact } from "../types";
-import { DealCreate } from "./DealCreate";
 
-export const DealEmpty = ({ children }: { children?: ReactNode }) => {
+export const DealEmpty = () => {
   const translate = useTranslate();
-  const location = useLocation();
-  const matchCreate = matchPath("/deals/create", location.pathname);
   const appbarHeight = useAppBarHeight();
 
-  // get Contact data
   const { data: contacts, isPending: contactsLoading } = useGetList<Contact>(
     "contacts",
     {
@@ -27,7 +22,7 @@ export const DealEmpty = ({ children }: { children?: ReactNode }) => {
 
   return (
     <div
-      className="flex flex-col justify-center items-center gap-12"
+      className="flex flex-col items-center justify-center gap-12"
       style={{
         height: `calc(100dvh - ${appbarHeight}px)`,
       }}
@@ -42,7 +37,7 @@ export const DealEmpty = ({ children }: { children?: ReactNode }) => {
             <h3 className="text-lg font-bold">
               {translate("resources.deals.empty.title")}
             </h3>
-            <p className="text-sm text-center text-muted-foreground mb-4">
+            <p className="mb-4 text-center text-sm text-muted-foreground">
               {translate("resources.deals.empty.description")}
             </p>
           </div>
@@ -50,15 +45,13 @@ export const DealEmpty = ({ children }: { children?: ReactNode }) => {
             <CreateButton label="resources.deals.action.create" />
             <DataImportButton resource="deals" />
           </div>
-          <DealCreate open={!!matchCreate} />
-          {children}
         </>
       ) : (
         <div className="flex flex-col items-center gap-0">
           <h3 className="text-lg font-bold">
             {translate("resources.deals.empty.title")}
           </h3>
-          <p className="text-sm text-center text-muted-foreground mb-4">
+          <p className="mb-4 text-center text-sm text-muted-foreground">
             {translate("resources.contacts.empty.description")}
             <br />
             <Link to="/contacts/create" className="hover:underline">

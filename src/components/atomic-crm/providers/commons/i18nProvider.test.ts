@@ -1,13 +1,10 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { getInitialLocale, i18nProvider } from "./i18nProvider";
 
-afterEach(() => {
-  vi.unstubAllGlobals();
-});
-
 describe("i18nProvider", () => {
-  it("registers en and fr locales", () => {
+  it("registers pt-BR, en and fr locales", () => {
     expect(i18nProvider.getLocales?.()).toEqual([
+      { locale: "pt-BR", name: "Português (Brasil)" },
       { locale: "en", name: "English" },
       { locale: "fr", name: "Français" },
     ]);
@@ -45,21 +42,42 @@ describe("i18nProvider", () => {
     );
   });
 
-  it("uses browser french locale when available", () => {
-    vi.stubGlobal("navigator", {
-      language: "fr-FR",
-      languages: ["fr-FR", "en-US"],
-    });
+  it("translates the CPlay authentication flow in pt-BR", async () => {
+    await i18nProvider.changeLocale("pt-BR");
 
-    expect(getInitialLocale()).toBe("fr");
+    expect(i18nProvider.translate("crm.auth.welcome_title")).toBe(
+      "Bem-vindo ao CPlay Comercial",
+    );
+    expect(i18nProvider.translate("crm.auth.signup.create_first_user")).toBe(
+      "Crie a primeira conta de usuário para concluir a configuração.",
+    );
+    expect(i18nProvider.translate("crm.auth.first_name")).toBe("Nome");
+    expect(i18nProvider.translate("crm.auth.last_name")).toBe("Sobrenome");
+    expect(i18nProvider.translate("ra.auth.email")).toBe("E-mail");
+    expect(i18nProvider.translate("ra.auth.password")).toBe("Senha");
+    expect(i18nProvider.translate("crm.auth.signup.create_account")).toBe(
+      "Criar conta",
+    );
   });
 
-  it("falls back to english when browser locale is unsupported", () => {
-    vi.stubGlobal("navigator", {
-      language: "es-ES",
-      languages: ["es-ES", "pt-BR"],
-    });
+  it("uses CPlay branding in every authentication locale", async () => {
+    await i18nProvider.changeLocale("pt-BR");
+    expect(i18nProvider.translate("crm.auth.welcome_title")).toBe(
+      "Bem-vindo ao CPlay Comercial",
+    );
 
-    expect(getInitialLocale()).toBe("en");
+    await i18nProvider.changeLocale("en");
+    expect(i18nProvider.translate("crm.auth.welcome_title")).toBe(
+      "Welcome to CPlay Comercial",
+    );
+
+    await i18nProvider.changeLocale("fr");
+    expect(i18nProvider.translate("crm.auth.welcome_title")).toBe(
+      "Bienvenue sur CPlay Comercial",
+    );
+  });
+
+  it("uses pt-BR as the CPlay initial locale", () => {
+    expect(getInitialLocale()).toBe("pt-BR");
   });
 });

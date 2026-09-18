@@ -7,7 +7,6 @@ const adminSupabase = createClient(
   { auth: { autoRefreshToken: false, persistSession: false } },
 );
 
-// Tables in FK-safe deletion order (children before parents)
 const TABLES = [
   "tasks",
   "contact_notes",
@@ -15,6 +14,8 @@ const TABLES = [
   "deals",
   "contacts",
   "companies",
+  "products",
+  "lead_sources",
   "tags",
   "favicons_excluded_domains",
   "configuration",
@@ -23,11 +24,9 @@ const TABLES = [
 
 async function resetDb() {
   for (const table of TABLES) {
-    // Supabase client delete need a where clause to get executed, so we use one that will match on all rows (id is not null)
     await adminSupabase.from(table).delete().not("id", "is", null);
   }
 
-  // Delete all auth users (cascades to sales via DB trigger)
   const { data } = await adminSupabase.auth.admin.listUsers();
   await Promise.all(
     data.users.map((user) => adminSupabase.auth.admin.deleteUser(user.id)),
@@ -195,13 +194,58 @@ async function createContact({
   return data;
 }
 
+async function createProduct({
+  name,
+  basePrice,
+}: {
+  name: string;
+  basePrice: number;
+}) {
+  const { data, error } = await adminSupabase
+    .from("products")
+    .insert({
+      name,
+      base_price: basePrice,
+      active: true,
+      display_order: 0,
+    })
+    .select("id, name, base_price")
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to create product: ${error.message}`);
+  }
+
+  return data;
+}
+
+async function getDealByName(name: string) {
+  const { data, error } = await adminSupabase
+    .from("deals")
+    .select(
+      "id, name, stage, primary_contact_id, contact_ids, product_id, amount, sales_id",
+    )
+    .eq("name", name)
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to fetch deal: ${error.message}`);
+  }
+
+  return data;
+}
+
 const getMenuMethod = ({ page }: { page: Page; isMobile: boolean }) => ({
   goToDashboard: async () => {
     await page.getByRole("link", { name: "Dashboard" }).click();
     await page.waitForLoadState("networkidle");
   },
   goToContacts: async () => {
-    await page.getByRole("link", { name: "Contacts" }).click();
+    await page.getByRole("link", { name: "Contatos" }).click();
+    await page.waitForLoadState("networkidle");
+  },
+  goToDeals: async () => {
+    await page.getByRole("link", { name: "Oportunidades" }).click();
     await page.waitForLoadState("networkidle");
   },
 });
@@ -209,7 +253,6 @@ const getMenuMethod = ({ page }: { page: Page; isMobile: boolean }) => ({
 const dismissToast = async (page: Page, content: string) => {
   await expect(page.getByText(content)).toBeVisible();
   await page.getByLabel("Close toast").first().click();
-  // Since we are in optimistic UI, dismissing the toast trigger the request to the api linked to the toast message
   await page.waitForLoadState("networkidle");
 };
 
@@ -220,12 +263,12 @@ export const test = base.extend<{
   createCompany: typeof createCompany;
   createContact: typeof createContact;
   createNotes: typeof createNotes;
+  createProduct: typeof createProduct;
+  getDealByName: typeof getDealByName;
   menu: ReturnType<typeof getMenuMethod>;
   dismissToast: (content: string) => Promise<void>;
 }>({
   resetDb: [
-    // The first argument to a Playwright fixture function must use object destructuring ({}) — _ is not allowed.
-    // Playwright uses this to statically analyze which fixtures are requested.
     // eslint-disable-next-line no-empty-pattern
     async ({}, use) => {
       await resetDb();
@@ -252,6 +295,14 @@ export const test = base.extend<{
   // eslint-disable-next-line no-empty-pattern
   createNotes: async ({}, cb) => {
     await cb(createNotes);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  createProduct: async ({}, cb) => {
+    await cb(createProduct);
+  },
+  // eslint-disable-next-line no-empty-pattern
+  getDealByName: async ({}, cb) => {
+    await cb(getDealByName);
   },
   menu: async ({ page, isMobile }, cb) => {
     await cb(getMenuMethod({ page, isMobile }));

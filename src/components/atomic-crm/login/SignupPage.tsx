@@ -15,6 +15,7 @@ import { Notification } from "@/components/admin/notification";
 import { ConfirmationRequired } from "./ConfirmationRequired";
 import { SSOAuthButton } from "./SSOAuthButton";
 import { googleWorkplaceDomain } from "./authConfig";
+import { AuthLanguageSelector } from "./AuthLanguageSelector";
 
 export const SignupPage = () => {
   const queryClient = useQueryClient();
@@ -96,7 +97,10 @@ export const SignupPage = () => {
   };
 
   return (
-    <div className="h-screen p-8">
+    <div className="relative h-screen p-8">
+      <div className="absolute right-4 top-4 z-20 sm:right-8 sm:top-8">
+        <AuthLanguageSelector />
+      </div>
       <div className="flex items-center gap-4">
         <img
           src={logo}

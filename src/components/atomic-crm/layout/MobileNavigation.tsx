@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { Home, ListTodo, Plus, Settings, Users } from "lucide-react";
+import { BriefcaseBusiness, Home, Plus, Settings, Users } from "lucide-react";
 import { useTranslate } from "ra-core";
 import { Link, matchPath, useLocation, useMatch } from "react-router";
 import { ContactCreateSheet } from "../contacts/ContactCreateSheet";
@@ -23,60 +23,48 @@ export const MobileNavigation = () => {
     currentPath = "/";
   } else if (matchPath("/contacts/*", location.pathname)) {
     currentPath = "/contacts";
-  } else if (matchPath("/companies/*", location.pathname)) {
-    currentPath = "/companies";
-  } else if (matchPath("/tasks/*", location.pathname)) {
-    currentPath = "/tasks";
   } else if (matchPath("/deals/*", location.pathname)) {
     currentPath = "/deals";
+  } else if (matchPath("/settings", location.pathname)) {
+    currentPath = "/settings";
   } else {
     currentPath = false;
   }
 
-  // Check if the app is running as a PWA (standalone mode)
   const isPwa = window.matchMedia("(display-mode: standalone)").matches;
-  // Check if it's iOS on the web
   const isWebiOS = /iPad|iPod|iPhone/.test(window.navigator.userAgent);
 
   return (
     <nav
       aria-label={translate("crm.navigation.label")}
-      className="fixed bottom-0 left-0 right-0 z-50 bg-secondary h-14"
+      className="fixed inset-x-0 bottom-0 z-50 border-t border-border/80 bg-background/95 shadow-[0_-8px_24px_rgba(15,23,42,0.06)] backdrop-blur supports-[backdrop-filter]:bg-background/90"
       style={{
-        // iOS bug: even though viewport is set correctly, the bottom safe area inset is not accounted for
-        // So we manually add some padding to avoid the navigation being too close to the home bar
         paddingBottom: isPwa && isWebiOS ? 15 : undefined,
-        // We use box-sizing: border-box, so the height contains the padding.
-        // To actually increase the padding, we need to increase the height as well
         height:
-          "calc(var(--spacing)) * 6" + (isPwa && isWebiOS ? " + 15px" : ""),
+          "calc(var(--spacing) * 16)" + (isPwa && isWebiOS ? " + 15px" : ""),
       }}
     >
-      <div className="flex justify-center">
-        <>
-          <NavigationButton
-            href="/"
-            Icon={Home}
-            label={translate("ra.page.dashboard")}
-            isActive={currentPath === "/"}
-          />
-          <NavigationButton
-            href="/contacts"
-            Icon={Users}
-            label={translate("resources.contacts.name", {
-              smart_count: 2,
-            })}
-            isActive={currentPath === "/contacts"}
-          />
-          <CreateButton />
-          <NavigationButton
-            href="/tasks"
-            Icon={ListTodo}
-            label={translate("resources.tasks.name", { smart_count: 2 })}
-            isActive={currentPath === "/tasks"}
-          />
-          <SettingsButton />
-        </>
+      <div className="mx-auto flex h-full max-w-md items-center justify-around px-2">
+        <NavigationButton
+          href="/"
+          Icon={Home}
+          label="Dashboard"
+          isActive={currentPath === "/"}
+        />
+        <NavigationButton
+          href="/contacts"
+          Icon={Users}
+          label="Contatos"
+          isActive={currentPath === "/contacts"}
+        />
+        <CreateButton />
+        <NavigationButton
+          href="/deals"
+          Icon={BriefcaseBusiness}
+          label="Oportunidades"
+          isActive={currentPath === "/deals"}
+        />
+        <SettingsButton />
       </div>
     </nav>
   );
@@ -97,13 +85,16 @@ const NavigationButton = ({
     asChild
     variant="ghost"
     className={cn(
-      "flex-col gap-1 h-auto py-2 px-1 rounded-md w-16",
-      isActive ? null : "text-muted-foreground",
+      "h-12 min-w-14 flex-col gap-1 rounded-lg px-1 py-1.5 text-muted-foreground",
+      isActive &&
+        "bg-[var(--cplay-primary-subtle)] text-primary hover:bg-[var(--cplay-primary-subtle)] hover:text-primary",
     )}
   >
     <Link to={href}>
-      <Icon className="size-6" />
-      <span className="text-[0.6rem] font-medium">{label}</span>
+      <Icon className="size-5" aria-hidden="true" />
+      <span className="max-w-[68px] truncate text-[0.62rem] font-semibold">
+        {label}
+      </span>
     </Link>
   </Button>
 );
@@ -136,34 +127,28 @@ const CreateButton = () => {
           <Button
             variant="default"
             size="icon"
-            className="h-16 w-16 rounded-full -mt-3"
+            className="-mt-5 h-14 w-14 rounded-full border-4 border-background shadow-lg"
             aria-label={translate("ra.action.create")}
           >
-            <Plus className="size-10" />
+            <Plus className="size-6" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="mb-2 min-w-52">
           <DropdownMenuItem
-            className="h-12 px-4 text-base"
-            onSelect={() => {
-              setContactCreateOpen(true);
-            }}
+            className="h-11 px-4"
+            onSelect={() => setContactCreateOpen(true)}
           >
             {translate("resources.contacts.forcedCaseName")}
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="h-12 px-4 text-base"
-            onSelect={() => {
-              setNoteCreateOpen(true);
-            }}
+            className="h-11 px-4"
+            onSelect={() => setNoteCreateOpen(true)}
           >
             {translate("resources.notes.forcedCaseName")}
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="h-12 px-4 text-base"
-            onSelect={() => {
-              setTaskCreateOpen(true);
-            }}
+            className="h-11 px-4"
+            onSelect={() => setTaskCreateOpen(true)}
           >
             {translate("resources.tasks.forcedCaseName")}
           </DropdownMenuItem>
@@ -174,7 +159,6 @@ const CreateButton = () => {
 };
 
 const SettingsButton = () => {
-  const translate = useTranslate();
   const location = useLocation();
   const isActive = !!matchPath("/settings", location.pathname);
 
@@ -182,7 +166,7 @@ const SettingsButton = () => {
     <NavigationButton
       href="/settings"
       Icon={Settings}
-      label={translate("crm.settings.title")}
+      label="Ajustes"
       isActive={isActive}
     />
   );

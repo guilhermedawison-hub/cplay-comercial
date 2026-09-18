@@ -1,5 +1,6 @@
 import { CreateBase, Form, useGetIdentity, type MutationMode } from "ra-core";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { ContactInputs } from "./ContactInputs";
 import { FormToolbar } from "../layout/FormToolbar";
@@ -14,7 +15,11 @@ export const ContactCreate = ({
 }: {
   mutationMode?: MutationMode;
 }) => {
-  const { identity } = useGetIdentity();
+  const { identity, isPending } = useGetIdentity();
+
+  if (isPending || !identity) {
+    return <Skeleton className="mt-2 h-56 w-full rounded-xl lg:mr-72" />;
+  }
 
   return (
     <CreateBase
@@ -25,8 +30,9 @@ export const ContactCreate = ({
       <div className="mt-2 flex lg:mr-72">
         <div className="flex-1">
           <Form
+            key={String(identity.id)}
             defaultValues={{
-              sales_id: identity?.id,
+              sales_id: identity.id,
               email_jsonb: defaultEmailJsonb,
               phone_jsonb: defaultPhoneJsonb,
             }}

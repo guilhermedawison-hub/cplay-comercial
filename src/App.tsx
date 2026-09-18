@@ -1,36 +1,29 @@
 import { CRM } from "@/components/atomic-crm/root/CRM";
+import { CPlayDashboard } from "@/components/cplay/dashboard/CPlayDashboard";
+import { CPlayLayout } from "@/components/cplay/layout/CPlayLayout";
+import {
+  cplayBrand,
+  cplayCurrency,
+  cplayDealPipelineStatuses,
+  cplayDealStages,
+} from "@/cplay/config";
 
 /**
- * Application entry point
+ * CPlay Comercial application entry point.
  *
- * Customize Atomic CRM by passing props to the CRM component:
- *  - companySectors
- *  - darkTheme
- *  - dealCategories
- *  - dealPipelineStatuses
- *  - dealStages
- *  - lightTheme
- *  - darkModeLogo / lightModeLogo
- *  - noteStatuses
- *  - taskTypes
- *  - title
- * ... as well as all the props accepted by shadcn-admin-kit's <Admin> component.
- *
- * Logos must be an imported asset, an absolute URL, or a data URI — never a
- * route-relative path like "./img/logo.png", which breaks on nested routes.
- *
- * @example
- * import logoDark from "./logo-dark.svg";
- * import logoLight from "./logo-light.svg";
- *
- * const App = () => (
- *    <CRM
- *       darkModeLogo={logoDark}
- *       lightModeLogo={logoLight}
- *       title="Acme CRM"
- *    />
- * );
+ * The Atomic CRM core remains isolated under components/atomic-crm so we can
+ * keep upstream compatibility while applying CPlay-specific configuration
+ * and presentation from this application layer.
  */
-const App = () => <CRM />;
+const App = () => (
+  <CRM
+    title={cplayBrand.title}
+    currency={cplayCurrency}
+    dealPipelineStatuses={cplayDealPipelineStatuses}
+    dealStages={[...cplayDealStages]}
+    layout={CPlayLayout}
+    dashboard={CPlayDashboard}
+  />
+);
 
 export default App;

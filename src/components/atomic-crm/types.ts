@@ -34,20 +34,8 @@ export type Sale = {
   avatar?: RAFile;
   disabled?: boolean;
   user_id: string;
-
-  /**
-   * This is a copy of the user's email, to make it easier to handle by react admin
-   * DO NOT UPDATE this field directly, it should be updated by the backend
-   */
   email: string;
-
   secondary_emails?: string[];
-
-  /**
-   * This is used by the fake rest provider to store the password
-   * DO NOT USE this field in your code besides the fake rest provider
-   * @deprecated
-   */
   password?: string;
 } & Pick<RaRecord, "id">;
 
@@ -62,6 +50,7 @@ export type Company = {
   address: string;
   zipcode: string;
   city: string;
+  neighborhood?: string | null;
   state_abbr: string;
   sales_id?: Identifier;
   created_at: string;
@@ -118,6 +107,9 @@ export type Deal = {
   name: string;
   company_id: Identifier;
   contact_ids: Identifier[];
+  primary_contact_id?: Identifier | null;
+  product_id?: Identifier | null;
+  lead_source_id?: Identifier | null;
   category: string;
   stage: string;
   description: string;
@@ -128,6 +120,9 @@ export type Deal = {
   expected_closing_date: string;
   sales_id: Identifier;
   index: number;
+  next_follow_up_at?: string | null;
+  next_follow_up_type?: string | null;
+  next_follow_up_note?: string | null;
 } & Pick<RaRecord, "id">;
 
 export type DealNote = {
@@ -136,8 +131,6 @@ export type DealNote = {
   date: string;
   sales_id: Identifier;
   attachments?: AttachmentNote[];
-
-  // This is defined for compatibility with `ContactNote`
   status?: undefined;
 } & Pick<RaRecord, "id">;
 
@@ -181,7 +174,7 @@ export type ActivityContactNoteCreated = {
 
 export type ActivityDealCreated = {
   type: typeof DEAL_CREATED;
-  company_id: Identifier;
+  company_id?: Identifier | null;
   sales_id?: Identifier;
   deal: Deal;
   date: string;

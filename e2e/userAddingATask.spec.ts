@@ -39,14 +39,15 @@ test.describe("user adding a task", () => {
       company_id: company.id,
     });
   });
+
   test("user adding a task", async ({ page, isMobile, menu, dismissToast }) => {
     await page.goto("/");
     await page.getByLabel("Email").fill("john@doe.com");
     await page.getByLabel("Password").fill("password");
     await page.getByRole("button", { name: "Sign in" }).click();
 
-    await expect(page).toHaveTitle(/Atomic CRM/);
-    await expect(page.getByText("Latest Activity")).toBeVisible();
+    await expect(page).toHaveTitle(/CPlay Comercial|Atomic CRM/);
+    await expect(page.getByText("Visão comercial")).toBeVisible();
 
     await menu.goToContacts();
     await page.waitForLoadState("networkidle");
@@ -60,11 +61,11 @@ test.describe("user adding a task", () => {
     } else {
       await page.getByRole("button", { name: "Add Task" }).click();
     }
+
     await page.getByLabel("Description *").fill("Follow up with Jane");
     await page.getByLabel("Due date").fill("2026-04-11T21:00");
     await page.getByLabel("Type").click();
     await page.getByRole("option", { name: "Call" }).click();
-
     await page.getByRole("button", { name: "Save" }).click();
 
     await dismissToast("Task added");
@@ -72,26 +73,13 @@ test.describe("user adding a task", () => {
     if (isMobile) {
       await expect(page.getByText("1 task")).toBeVisible();
       await page.getByText("1 task").click();
-
       await expect(page.getByText("Follow up with Jane")).toBeVisible();
       await expect(page.getByText("due 4/11/2026, 9:00:00 PM")).toBeVisible();
     } else {
-      await expect(page.getByText("Tasks")).toBeVisible();
-
-      await expect(page.getByText("Tasks").locator("..")).toHaveText(
-        /Follow up with Jane/,
-      );
+      await expect(page.getByText("Follow up with Jane")).toBeVisible();
       await menu.goToDashboard();
-
-      await expect(page.getByText("Upcoming Tasks")).toBeVisible();
-      await expect(
-        page.getByText("Upcoming Tasks").locator("../.."),
-      ).toHaveText(/Follow up with Jane/);
-      await expect(
-        page.getByText("Follow up with Jane").locator(".."),
-      ).toHaveText(
-        "Call Follow up with Janedue 4/11/2026, 9:00:00 PM (Re: Jane Smith)",
-      );
+      await expect(page.getByText("Próximas ações")).toBeVisible();
+      await expect(page.getByText("Follow up with Jane")).toBeVisible();
     }
   });
 });

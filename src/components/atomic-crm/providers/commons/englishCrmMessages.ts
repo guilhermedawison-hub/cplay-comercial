@@ -380,7 +380,7 @@ export const englishCrmMessages = {
         creating: "Creating...",
         initial_user_created: "Initial user successfully created",
       },
-      welcome_title: "Welcome to Atomic CRM",
+      welcome_title: "Welcome to CPlay Comercial",
     },
     common: {
       account_manager: "Account manager",
