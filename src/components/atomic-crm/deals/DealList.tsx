@@ -92,24 +92,24 @@ const DealLayout = () => {
   const hasFilters = filterValues && Object.keys(filterValues).length > 0;
 
   if (isPending) return null;
-  if (!data?.length && !hasFilters)
-    return (
-      <>
-        <DealEmpty>
-          <DealShow open={!!matchShow} id={matchShow?.params.id} />
-          <DealArchivedList />
-        </DealEmpty>
-      </>
+
+  const content =
+    !data?.length && !hasFilters ? (
+      <DealEmpty />
+    ) : (
+      <div className="w-full">
+        <DealListContent />
+        <DealArchivedList />
+      </div>
     );
 
   return (
-    <div className="w-full">
-      <DealListContent />
-      <DealArchivedList />
+    <>
+      {content}
       <DealCreate open={!!matchCreate} />
       <DealEdit open={!!matchEdit && !matchCreate} id={matchEdit?.params.id} />
       <DealShow open={!!matchShow} id={matchShow?.params.id} />
-    </div>
+    </>
   );
 };
 
