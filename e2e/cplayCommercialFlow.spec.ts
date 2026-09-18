@@ -8,6 +8,13 @@ test("CPlay commercial opportunity flow", async ({
   getDealByName,
   menu,
 }) => {
+  page.on("console", (message) => {
+    const text = message.text();
+    if (text.includes("CPLAY_DEALS_QUERY_")) {
+      console.log(text);
+    }
+  });
+
   const sales = await createSales({
     first_name: "Luiz",
     last_name: "Comercial",
