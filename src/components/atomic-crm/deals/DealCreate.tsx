@@ -5,7 +5,6 @@ import {
   useGetIdentity,
   useListContext,
   useRedirect,
-  type GetListResult,
 } from "ra-core";
 import { Create } from "@/components/admin/create";
 import { SaveButton } from "@/components/admin/form";
@@ -25,24 +24,16 @@ import { normalizeDealFormData } from "./normalizeDealFormData";
 export const DealCreate = ({ open }: { open: boolean }) => {
   const redirect = useRedirect();
   const dataProvider = useDataProvider();
-  const { data: allDeals, refetch } = useListContext<Deal>();
+  const { data: allDeals } = useListContext<Deal>();
   const { identity, isPending } = useGetIdentity();
+  const queryClient = useQueryClient();
 
   const handleClose = () => {
     redirect("/deals");
   };
 
-  const queryClient = useQueryClient();
-
   const onSuccess = async (deal: Deal) => {
-    if (!allDeals) {
-      await queryClient.invalidateQueries({ queryKey: ["deals", "getList"] });
-      await refetch();
-      redirect("/deals");
-      return;
-    }
-
-    const deals = allDeals.filter(
+    const deals = (allDeals ?? []).filter(
       (d: Deal) => d.stage === deal.stage && d.id !== deal.id,
     );
 
@@ -56,37 +47,10 @@ export const DealCreate = ({ open }: { open: boolean }) => {
       ),
     );
 
-    const dealsById = deals.reduce(
-      (acc, d) => ({
-        ...acc,
-        [d.id]: { ...d, index: d.index + 1 },
-      }),
-      {} as { [key: string]: Deal },
-    );
+    await queryClient.resetQueries({
+      queryKey: ["deals", "getList"],
+    });
 
-    const now = Date.now();
-
-    queryClient.setQueriesData<GetListResult | undefined>(
-      { queryKey: ["deals", "getList"] },
-      (res) => {
-        if (!res) return res;
-
-        const updatedDeals = res.data.map(
-          (d: Deal) => dealsById[d.id] || d,
-        );
-        const hasCreatedDeal = updatedDeals.some((d: Deal) => d.id === deal.id);
-
-        return {
-          ...res,
-          data: hasCreatedDeal ? updatedDeals : [deal, ...updatedDeals],
-          total: hasCreatedDeal ? res.total : (res.total ?? updatedDeals.length) + 1,
-        };
-      },
-      { updatedAt: now },
-    );
-
-    await queryClient.invalidateQueries({ queryKey: ["deals", "getList"] });
-    await refetch();
     redirect("/deals");
   };
 
