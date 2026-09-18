@@ -4,13 +4,13 @@ test("user onboarding", async ({ page, isMobile, menu, dismissToast }) => {
   await page.goto("/");
 
   await expect(page).toHaveTitle(/CPlay Comercial|Atomic CRM/);
-  await expect(page.getByText("Welcome to Atomic CRM")).toBeVisible();
+  await expect(page.getByText("Bem-vindo ao CPlay Comercial")).toBeVisible();
 
-  await page.getByLabel("First name").fill("John");
-  await page.getByLabel("Last name").fill("Doe");
-  await page.getByLabel("Email").fill("john@doe.com");
-  await page.getByLabel("Password").fill("password");
-  await page.getByRole("button", { name: "Create account" }).click();
+  await page.getByLabel("Nome").fill("John");
+  await page.getByLabel("Sobrenome").fill("Doe");
+  await page.getByLabel("E-mail").fill("john@doe.com");
+  await page.getByLabel("Senha").fill("password");
+  await page.getByRole("button", { name: "Criar conta" }).click();
 
   await expect(page.getByText("Visão comercial")).toBeVisible();
 
