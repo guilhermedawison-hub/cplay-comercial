@@ -47,44 +47,9 @@ export const DealCreate = ({ open }: { open: boolean }) => {
       ),
     );
 
-    const querySnapshot = queryClient
-      .getQueryCache()
-      .getAll()
-      .map((query) => ({
-        key: query.queryKey,
-        status: query.state.status,
-        fetchStatus: query.state.fetchStatus,
-        dataUpdatedAt: query.state.dataUpdatedAt,
-        dataLength:
-          Array.isArray((query.state.data as { data?: unknown[] } | undefined)?.data)
-            ? (query.state.data as { data: unknown[] }).data.length
-            : undefined,
-      }));
-
-    console.info("CPLAY_DEALS_QUERY_SNAPSHOT", JSON.stringify(querySnapshot));
-
     await queryClient.resetQueries({
       queryKey: ["deals", "getList"],
     });
-
-    const postResetSnapshot = queryClient
-      .getQueryCache()
-      .getAll()
-      .map((query) => ({
-        key: query.queryKey,
-        status: query.state.status,
-        fetchStatus: query.state.fetchStatus,
-        dataUpdatedAt: query.state.dataUpdatedAt,
-        dataLength:
-          Array.isArray((query.state.data as { data?: unknown[] } | undefined)?.data)
-            ? (query.state.data as { data: unknown[] }).data.length
-            : undefined,
-      }));
-
-    console.info(
-      "CPLAY_DEALS_QUERY_POST_RESET",
-      JSON.stringify(postResetSnapshot),
-    );
 
     redirect("/deals");
   };
